@@ -1,0 +1,161 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:fluentui_icons/fluentui_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
+
+// ignore: must_be_immutable
+class CartItem extends StatelessWidget {
+  // BookModel books;
+  // int quantity;
+  const CartItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 60.h,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.all(4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[50],
+              ),
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Image(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/1.png'),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Book name',
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontFamily: 'Poppins-black',
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // context.read<CartCubit>().removeFromCart(books);
+                        },
+                        child: Icon(
+                          Icons.cancel,
+                          color: CustomColors.orangeColor,
+                          size: 16.h,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Author',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontFamily: 'Poppins-regular',
+                      ),
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: '100',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF282846),
+                            fontSize: 14.sp,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: ' TMT',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF282846),
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // if (quantity > 0) {
+                                //   context
+                                //       .read<CartCubit>()
+                                //       .removeFromCart(books);
+                                // }
+                              },
+                              child: Icon(
+                                FluentSystemIcons.ic_fluent_remove_filled,
+                                color: CustomColors.blueColor,
+                                size: 14.h,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              '1',
+                              style: TextStyle(
+                                color: CustomColors.blueColor,
+                                fontFamily: 'Poppins-black',
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            GestureDetector(
+                              onTap: () {
+                                // context.read<CartCubit>().addToCart(books);
+                              },
+                              child: Icon(
+                                FluentSystemIcons.ic_fluent_add_filled,
+                                color: CustomColors.blueColor,
+                                size: 14.h,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
