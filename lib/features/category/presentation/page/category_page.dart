@@ -13,7 +13,7 @@ class CategoryPage extends StatelessWidget {
       appBar: AppBar(title: Text(context.l10n.categories)),
       body: BlocBuilder<CategoryCubit, CategoryState>(
         builder: (context, state) {
-          print(state);
+         
           if (state is CategoryLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is CategoryLoaded) {
@@ -21,7 +21,7 @@ class CategoryPage extends StatelessWidget {
               itemCount: state.categories.length,
               itemBuilder: (context, index) {
                 final categoryItem = state.categories[index];
-                return CategoryItem(ontap: () {}, title: categoryItem.name);
+                return CategoryItem(categoryModel: categoryItem,);
               },
             );
           } else if (state is CategoryError) {

@@ -1,13 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
 import 'package:new_kitap_chesmesi/common/widgets/custom_button.dart';
+import 'package:new_kitap_chesmesi/features/book/domain/model/book_model.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cubit.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';
 
 // ignore: must_be_immutable
 class DetailBottomBar extends StatelessWidget {
-  const DetailBottomBar({super.key});
+  final BookModel book;
+  const DetailBottomBar({super.key,required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,9 @@ class DetailBottomBar extends StatelessWidget {
               flex: 2,
               child: CustomButton(
                 backgroundColor: CustomColors.orangeColor,
-                onTap: () {},
+                onTap: () {
+                  context.read<OrderCubit>().addOrder(book);
+                },
                 child: Text(
                   context.l10n.add_cart,
                   style: TextStyle(

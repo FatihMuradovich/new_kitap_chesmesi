@@ -1,14 +1,23 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cubit.dart';
+import '../../../../../book/domain/model/book_model.dart';
 
 // ignore: must_be_immutable
-class CartItem extends StatelessWidget {
-  // BookModel books;
-  // int quantity;
-  const CartItem({super.key});
+class CartItem extends StatefulWidget {
+  BookModel book;
+
+  CartItem({super.key, required this.book});
+
+  @override
+  State<CartItem> createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,9 @@ class CartItem extends StatelessWidget {
                 aspectRatio: 1 / 1,
                 child: Image(
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/images/1.png'),
+                  image: widget.book.backgroundImageHard == null
+                      ? AssetImage('assets/images/1.png')
+                      : NetworkImage(widget.book.backgroundImageHard ?? ''),
                 ),
               ),
             ),
@@ -44,7 +55,7 @@ class CartItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Book name',
+                        widget.book.name,
                         maxLines: 2,
                         style: TextStyle(
                           fontFamily: 'Poppins-black',
@@ -53,7 +64,7 @@ class CartItem extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // context.read<CartCubit>().removeFromCart(books);
+                          context.read<OrderCubit>().removeOrder(widget.book);
                         },
                         child: Icon(
                           Icons.cancel,
@@ -65,7 +76,7 @@ class CartItem extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      'Author',
+                      widget.book.author,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 12.sp,
@@ -79,7 +90,7 @@ class CartItem extends StatelessWidget {
                     children: [
                       RichText(
                         text: TextSpan(
-                          text: '100',
+                          text: widget.book.priceHardcover.toString(),
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
@@ -113,11 +124,11 @@ class CartItem extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // if (quantity > 0) {
-                                //   context
-                                //       .read<CartCubit>()
-                                //       .removeFromCart(books);
-                                // }
+                                context
+                                    .read<OrderCubit>()
+                                    .decreaseQuantity(widget.book);
+                                quantity--;
+                                setState(() {});
                               },
                               child: Icon(
                                 FluentSystemIcons.ic_fluent_remove_filled,
@@ -127,7 +138,7 @@ class CartItem extends StatelessWidget {
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              '1',
+                              '$quantity',
                               style: TextStyle(
                                 color: CustomColors.blueColor,
                                 fontFamily: 'Poppins-black',
@@ -137,7 +148,11 @@ class CartItem extends StatelessWidget {
                             SizedBox(width: 8.w),
                             GestureDetector(
                               onTap: () {
-                                // context.read<CartCubit>().addToCart(books);
+                                context
+                                    .read<OrderCubit>()
+                                    .increaseQuantity(widget.book);
+                                quantity++;
+                                setState(() {});
                               },
                               child: Icon(
                                 FluentSystemIcons.ic_fluent_add_filled,

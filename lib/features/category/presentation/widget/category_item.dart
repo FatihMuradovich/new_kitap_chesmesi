@@ -3,21 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:new_kitap_chesmesi/common/constants/customn_icons.dart';
+import 'package:new_kitap_chesmesi/features/book/presentation/page/books_view.dart';
+import 'package:new_kitap_chesmesi/features/category/domain/model/category_model.dart';
+import 'package:new_kitap_chesmesi/localization/localization.dart';
 
 // ignore: must_be_immutable
 class CategoryItem extends StatelessWidget {
-  Function() ontap;
-  String title;
-  CategoryItem({
-    Key? key,
-    required this.ontap,
-    required this.title,
-  }) : super(key: key);
+  final CategoryModel categoryModel;
+  const CategoryItem({
+    super.key,
+    required this.categoryModel,
+  });
+
+  String getLocalazedTitle(String locale) {
+    switch (locale) {
+      case 'en':
+        return categoryModel.nameEn;
+      case 'ru':
+        return categoryModel.nameRu;
+      case 'tr':
+        return categoryModel.nameTm;
+      default:
+        return categoryModel.nameTm;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final title = getLocalazedTitle(context.l10n.localeName);
+
     return GestureDetector(
-      onTap: ontap,
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BooksView(
+                    title: title,
+                    categoryId: categoryModel.id,
+                  ))),
       child: Card(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),

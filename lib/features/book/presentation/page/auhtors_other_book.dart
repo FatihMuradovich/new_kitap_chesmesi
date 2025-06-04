@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:new_kitap_chesmesi/features/book/presentation/widget/book_item.dart';
 
 class AutgorsOtherBooks extends StatelessWidget {
   const AutgorsOtherBooks({
@@ -19,7 +18,8 @@ class AutgorsOtherBooks extends StatelessWidget {
       itemCount: 5,
       scrollDirection: Axis.horizontal,
       itemBuilder: (BuildContext context, int index) {
-        return BookItem(margin: true, );
+        // return BookItem(margin: true, );
+        return Text('data');
       },
     );
   }

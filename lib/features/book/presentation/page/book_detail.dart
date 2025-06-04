@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
+import 'package:new_kitap_chesmesi/features/book/domain/model/book_model.dart';
 import 'package:new_kitap_chesmesi/features/book/presentation/page/auhtors_other_book.dart';
 import 'package:new_kitap_chesmesi/features/book/presentation/widget/book_speciality.dart';
 import 'package:new_kitap_chesmesi/features/book/presentation/widget/cover_item.dart';
@@ -8,7 +9,8 @@ import 'package:new_kitap_chesmesi/features/book/presentation/widget/detail_bott
 import 'package:new_kitap_chesmesi/localization/localization.dart';
 
 class BookDetail extends StatelessWidget {
-  const BookDetail({super.key});
+  final BookModel book;
+  const BookDetail({super.key,required this.book});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +92,7 @@ class BookDetail extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 5.w),
-                      Expanded (
+                      Expanded(
                         child: CoverItem(
                           title: 'Soft Cover',
                           color: Colors.grey,
@@ -161,7 +163,7 @@ class BookDetail extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: DetailBottomBar(),
+      bottomNavigationBar: DetailBottomBar(book: book,),
     );
   }
 }

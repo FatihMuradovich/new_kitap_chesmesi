@@ -4,8 +4,12 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:new_kitap_chesmesi/features/book/presentation/cubit/books_cubit.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/category_cubit.dart';
+import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/cubit.dart';
+import 'package:new_kitap_chesmesi/features/home/presentation/cubit/images_cubit.dart';
 import 'package:new_kitap_chesmesi/features/navBar/cubit/nav_bar_cubit.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cubit.dart';
 import 'package:new_kitap_chesmesi/features/splash/presentation/page/splash_page.dart';
 
 class App extends StatefulWidget {
@@ -35,6 +39,10 @@ class _AppState extends State<App> {
         BlocProvider(create: (_) => NavBarCubit()),
         BlocProvider(create: (_) => di<AuthCubit>()),
         BlocProvider(create: (_) => di<CategoryCubit>()..fetchCategories()),
+        BlocProvider(create: (_) => di<BooksCubit>()..fetchBooks()),
+        BlocProvider(create: (_) => di<ImagesCubit>()..fetchImages()),
+        BlocProvider(create: (_) => di<FavoriteCubit>()..loadFavorites()),
+        BlocProvider(create: (_) => di<OrderCubit>()),
       ],
       child: ScreenUtilInit(
         builder: (_, child) {
@@ -61,13 +69,11 @@ class _AppState extends State<App> {
                   fontSize: 20,
                   fontFamily: 'Poppins-regular',
                 ),
-
                 iconTheme: IconThemeData(color: Colors.black),
                 actionsIconTheme: IconThemeData(color: Colors.black),
               ),
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             ),
-
             home: child,
           );
         },

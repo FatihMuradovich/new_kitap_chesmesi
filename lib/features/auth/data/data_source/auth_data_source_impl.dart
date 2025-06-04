@@ -15,18 +15,16 @@ class AuthDataSourceImpl implements AuthDataSource {
     required String phone,
     required String password,
   }) async {
-    final response = await dio.post(
-      '/register',
-      data: {
-        'name': name,
-        'surname': surname,
-        'birthday': birthday,
-        'phone': phone,
-        'password': password,
-      },
-    );
-
-    return UserModel.fromJson(response.data);
+    final response = await dio.post('register/',
+        data: {
+          'first_name': name,
+          'last_name': surname,
+          'birthday': birthday,
+          'phone_number': phone,
+          'password': password,
+        },
+        options: Options(headers: {'Content-Type': 'application/json'}));
+    return UserModel.fromJsonRegister(response.data);
   }
 
   @override
@@ -35,9 +33,11 @@ class AuthDataSourceImpl implements AuthDataSource {
     required String password,
   }) async {
     final response = await dio.post(
-      '/login',
+      'login/',
       data: {'username': phone, 'password': password},
     );
+    print(response.data);
+
     return UserModel.fromJson(response.data);
   }
 }

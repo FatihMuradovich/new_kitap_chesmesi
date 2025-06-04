@@ -2,7 +2,7 @@ import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
-import 'package:new_kitap_chesmesi/features/cart/presentation/page/cart_page.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/page/cart/cart_page.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/page/category_page.dart';
 import 'package:new_kitap_chesmesi/features/favorite/presentation/page/favorite_page.dart';
 import 'package:new_kitap_chesmesi/features/home/presentation/page/home_page.dart';

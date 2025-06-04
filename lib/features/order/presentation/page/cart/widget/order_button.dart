@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
 import 'package:new_kitap_chesmesi/common/widgets/custom_button.dart';
-import 'package:new_kitap_chesmesi/core/utils/animate_route.dart';
 import 'package:new_kitap_chesmesi/features/navBar/cubit/nav_bar_cubit.dart';
 import 'package:new_kitap_chesmesi/features/order/presentation/page/order_page.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';

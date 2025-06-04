@@ -215,7 +215,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   isPassword: true,
                 ),
                 SizedBox(height: 10.h),
-
                 BlocListener<AuthCubit, AuthState>(
                   listener: (context, state) {
                     print(state);
@@ -233,14 +232,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   child: LoginRegisterButton(
                     onTap: () {
+                      
                       if (_formKey.currentState!.validate()) {
                         context.read<AuthCubit>().register(
-                          name: _nameController.text,
-                          surname: _surnameController.text,
-                          birthday: _dateController.text,
-                          phone: _phoneController.text,
-                          password: _passwordController.text,
-                        );
+                              name: _nameController.text,
+                              surname: _surnameController.text,
+                              birthday: _dateController.text,
+                              phone: "+993${_phoneController.text}",
+                              password: _passwordController.text,
+                            );
                       }
                     },
                     width: double.infinity,

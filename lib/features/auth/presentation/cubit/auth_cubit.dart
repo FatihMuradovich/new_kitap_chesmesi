@@ -7,7 +7,7 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
-
+  UserModel? user;
   AuthCubit({required this.repository}) : super(AuthInitial());
 
   Future<void> register({
@@ -19,14 +19,14 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(AuthLoading());
     try {
-      final user = await repository.register(
+       user = await repository.register(
         name: name,
         surname: surname,
         birthday: birthday,
         phone: phone,
         password: password,
       );
-      emit(AuthSuccess(user));
+      emit(AuthSuccess(user as UserModel));
     } catch (e) {
       print(e);
       emit(AuthError(e.toString()));
@@ -36,10 +36,9 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login({required String phone, required String password}) async {
     emit(AuthLoading());
     try {
-      final user = await repository.login(phone: phone, password: password);
-      emit(AuthSuccess(user));
+       user = await repository.login(phone: phone, password: password);
+      emit(AuthSuccess(user as UserModel));
     } catch (e) {
-      print(e);
       emit(AuthError(e.toString()));
     }
   }

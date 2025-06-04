@@ -110,41 +110,51 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
                 SizedBox(height: 10.h),
-                BlocBuilder<AuthCubit, AuthState>(
-                  builder: (context, state) {
-                    print(state);
+                // Use BlocListener for side effects like navigation and showing Snackbars
+                BlocListener<AuthCubit, AuthState>(
+                  listener: (context, state) {
                     if (state is AuthSuccess) {
+                      // Perform navigation here
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => CustomNavBar()),
                       );
-                    }
-                    if (state is AuthError) {
-                      ScaffoldMessenger(
-                        child: SnackBar(content: Text(state.message)),
+                    } else if (state is AuthError) {
+                      // Show SnackBar here. Corrected syntax for showing a SnackBar.
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message)),
                       );
                     }
-                    return LoginRegisterButton(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<AuthCubit>().login(
-                            phone: '+993${_phoneNumberController.text}',
-                            password: _passwordController.text,
-                          );
-                        }
-                      },
-                      width: double.infinity,
-                      backgroundColor: CustomColors.orangeColor,
-                      child: Text(
-                        'Içeri girmek',
-                        style: TextStyle(
-                          fontFamily: 'Poppins-regular',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    );
                   },
+                  // Keep BlocBuilder for UI updates (like showing a loading indicator)
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      // You might want to show a loading indicator or disable the button
+                      // if (state is AuthLoading) {
+                      //   return CircularProgressIndicator();
+                      // }
+                      return LoginRegisterButton(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AuthCubit>().login(
+                                  phone: '+993${_phoneNumberController.text}',
+                                  password: _passwordController.text,
+                                );
+                          }
+                        },
+                        width: double.infinity,
+                        backgroundColor: CustomColors.orangeColor,
+                        child: Text(
+                          'Içeri girmek',
+                          style: TextStyle(
+                            fontFamily: 'Poppins-regular',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(height: 10.h),
                 Row(
