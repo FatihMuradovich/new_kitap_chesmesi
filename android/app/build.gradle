@@ -28,7 +28,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.fatih.kitapchesmesi"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -38,25 +37,47 @@ android {
         versionName = flutter.versionName
     }
     signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+        // key.properties ve keystore repoda değildir (gizli). Dosya yoksa
+        // (başka bilgisayar, CI) debug build'ler yine çalışsın diye release
+        // imzası yalnızca dosya varken tanımlanır.
+        if (keystorePropertiesFile.exists()) {
+            release {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
-            minifyEnabled false
-            shrinkResources false
+            if (keystorePropertiesFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+            // R8: kullanılmayan kodu/kaynakları atar, uygulamayı küçültür ve
+            // Java/Kotlin tarafını karartır. Dart kodu için build komutunda
+            // --obfuscate --split-debug-info kullanın (README / RELEASE notu).
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+// İmzasız (veya debug imzalı) bir release paketi yanlışlıkla mağazaya
+// gitmesin: key.properties yoksa release build açık bir mesajla durur.
+gradle.taskGraph.whenReady { graph ->
+    def releaseTask = graph.allTasks.any { it.name.toLowerCase().contains("release") }
+    if (releaseTask && !keystorePropertiesFile.exists()) {
+        throw new GradleException(
+            "android/key.properties bulunamadı: release build imzalanamaz. " +
+            "Keystore ve key.properties dosyalarını yerleştirin.")
+    }
 }
 
 dependencies {
