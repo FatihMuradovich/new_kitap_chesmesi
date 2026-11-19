@@ -6,6 +6,7 @@ import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
 import 'package:new_kitap_chesmesi/common/utils/notification_helper.dart';
 import 'package:new_kitap_chesmesi/common/widgets/guest_auth_prompt.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
+import 'package:new_kitap_chesmesi/core/session/end_user_session.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.gr.dart';
 import 'package:new_kitap_chesmesi/features/profile/data/data_source/user_data_source.dart';
@@ -67,8 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _clearStorageAndLogout() async {
     try {
-      final dioClient = di<DioClient>();
-      await dioClient.clearAllStorage();
+      await endUserSession(context);
 
       if (mounted) {
         // Bildirimi göster
@@ -100,8 +100,8 @@ class _ProfilePageState extends State<ProfilePage> {
       final userDataSource = di<UserDataSource>();
       await userDataSource.deleteAccount();
 
-      final dioClient = di<DioClient>();
-      await dioClient.clearAllStorage();
+      if (!mounted) return;
+      await endUserSession(context);
 
       if (mounted) {
         NotificationHelper.showSuccess(

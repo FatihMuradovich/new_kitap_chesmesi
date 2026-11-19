@@ -19,4 +19,7 @@ class CouponCubit extends Cubit<CouponState> {
       emit(CouponError(e.toString()));
     }
   }
+
+  /// Oturum kapanınca çağrılır — önceki kullanıcının kuponları ekranda kalmasın.
+  void reset() => emit(CouponInitial());
 }

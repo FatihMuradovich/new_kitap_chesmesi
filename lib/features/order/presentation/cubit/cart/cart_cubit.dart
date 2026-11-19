@@ -169,6 +169,9 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
+  /// Oturum kapanınca çağrılır — önceki kullanıcının sepeti ekranda kalmasın.
+  void reset() => emit(CartInitial());
+
   int get cartItemCount {
     final currentState = state;
     if (currentState is CartLoaded) {

@@ -6,7 +6,9 @@ import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/forgot/forgot_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_state.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/register_cubit.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_code/register_code_cubit.dart';
 import 'package:new_kitap_chesmesi/features/book/presentation/cubit/getBookByAuthorId/book_by_author_id_cubit.dart';
 import 'package:new_kitap_chesmesi/features/book/presentation/cubit/getBookById/get_book_by_id_cubit.dart';
@@ -129,51 +131,85 @@ class _AppState extends State<App> {
           create: (_) => di<NotificationCubit>(),
         ),
       ],
-      child: ScreenUtilInit(
-        designSize: const Size(360, 640),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, __) {
-          final appRouter = di<AppRouter>();
-          return MaterialApp.router(
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            localeResolutionCallback: (deviceLocale, supportedLocales) {
-              if (deviceLocale != null) {
-                for (var supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode ==
-                      deviceLocale.languageCode) {
-                    return supportedLocale;
+      child: _SessionStartListener(
+        child: ScreenUtilInit(
+          designSize: const Size(360, 640),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (_, __) {
+            final appRouter = di<AppRouter>();
+            return MaterialApp.router(
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localeResolutionCallback: (deviceLocale, supportedLocales) {
+                if (deviceLocale != null) {
+                  for (var supportedLocale in supportedLocales) {
+                    if (supportedLocale.languageCode ==
+                        deviceLocale.languageCode) {
+                      return supportedLocale;
+                    }
                   }
                 }
-              }
-              return const Locale('tr'); // fallback
-            },
-            locale: locale,
-            title: 'Kitap Çeşmesi',
-            debugShowCheckedModeBanner: false,
-            scaffoldMessengerKey: scaffoldMessengerKey,
-            routerConfig: appRouter.config(),
-            theme: ThemeData(
-              cardTheme: CardThemeData(color: Colors.white),
-              scaffoldBackgroundColor: Colors.white,
-              appBarTheme: AppBarTheme(
-                centerTitle: true,
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
-                titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Poppins-regular',
+                return const Locale('tr'); // fallback
+              },
+              locale: locale,
+              title: 'Kitap Çeşmesi',
+              debugShowCheckedModeBanner: false,
+              scaffoldMessengerKey: scaffoldMessengerKey,
+              routerConfig: appRouter.config(),
+              theme: ThemeData(
+                cardTheme: CardThemeData(color: Colors.white),
+                scaffoldBackgroundColor: Colors.white,
+                appBarTheme: AppBarTheme(
+                  centerTitle: true,
+                  backgroundColor: Colors.white,
+                  surfaceTintColor: Colors.white,
+                  titleTextStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontFamily: 'Poppins-regular',
+                  ),
+                  iconTheme: IconThemeData(color: Colors.black),
+                  actionsIconTheme: IconThemeData(color: Colors.black),
                 ),
-                iconTheme: IconThemeData(color: Colors.black),
-                actionsIconTheme: IconThemeData(color: Colors.black),
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               ),
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
+    );
+  }
+}
+
+/// Giriş / kayıt başarılı olunca kullanıcıya özel ana sayfa verisini yeniler.
+///
+/// `HomeCubit` uygulama boyunca yaşar ve ana sayfa yalnızca veri yoksa yükler;
+/// bu dinleyici olmadan misafirin (veya önceki kullanıcının) "önerilen
+/// kitaplar" listesi yeni oturumda da görünmeye devam ederdi.
+class _SessionStartListener extends StatelessWidget {
+  const _SessionStartListener({required this.child});
+
+  final Widget child;
+
+  void _refreshUserScopedData(BuildContext context) {
+    context.read<HomeCubit>().loadHomeData(silentRefresh: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginCubit, LoginState>(
+          listenWhen: (_, current) => current is LoginSuccess,
+          listener: (context, _) => _refreshUserScopedData(context),
+        ),
+        BlocListener<RegisterCubit, RegisterState>(
+          listenWhen: (_, current) => current is RegisterSuccess,
+          listener: (context, _) => _refreshUserScopedData(context),
+        ),
+      ],
+      child: child,
     );
   }
 }

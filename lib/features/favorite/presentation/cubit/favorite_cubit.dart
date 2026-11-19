@@ -27,6 +27,13 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     return _favoriteBooks.any((book) => book.id == bookId);
   }
 
+  /// Oturum kapanınca çağrılır. Kitap kartlarındaki kalpler `isBookFavorite`
+  /// ile [_favoriteBooks]'tan okunduğu için state ile birlikte liste de silinir.
+  void reset() {
+    _favoriteBooks = [];
+    emit(FavoriteInitial());
+  }
+
   Future<void> addFavorite(int bookId) async {
     final currentState = state;
     if (currentState is! FavoriteLoaded) {

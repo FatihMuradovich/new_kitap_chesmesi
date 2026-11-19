@@ -25,6 +25,9 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
+  /// Oturum kapanınca çağrılır — önceki kullanıcının profili ekranda kalmasın.
+  void reset() => emit(UserInitial());
+
   Future<void> updateUserProfile({
     required String name,
     required String surname,
