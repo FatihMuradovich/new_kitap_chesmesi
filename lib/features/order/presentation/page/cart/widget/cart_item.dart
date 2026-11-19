@@ -80,7 +80,7 @@ class CartItem extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      cartItem.author?.name ?? 'Yazar belirtilmemiş',
+                      cartItem.author?.name ?? '',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 12.sp,

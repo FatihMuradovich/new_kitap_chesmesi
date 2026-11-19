@@ -3,15 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/app.dart';
 import 'package:new_kitap_chesmesi/common/constants/constant_button.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_text_style.dart';
-import 'package:new_kitap_chesmesi/features/home/presentation/cubit/home/home_cubit.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:new_kitap_chesmesi/features/category/presentation/cubit/category_cubit.dart';
+import 'package:new_kitap_chesmesi/core/session/reload_language_dependent_data.dart';
 
 class LanguageDialog extends StatelessWidget {
   const LanguageDialog({
     super.key,
   });
+
+  void _changeLanguage(BuildContext context, Locale locale) {
+    // Önce dil ayarlanır ki yeniden istekler yeni dilde gitsin.
+    App.of(context)?.setLocale(locale);
+    reloadLanguageDependentData(context);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +50,8 @@ class LanguageDialog extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 5.h),
               height: 50,
               child: ElevatedButton(
-                onPressed: () async {
-                  // NOTE: UI locale for Turkmen should be 'tr' (matches ARB: app_tr.arb)
-                  App.of(context)?.setLocale(const Locale('tr'));
-                  // Refetch language-dependent data
-                  context.read<CategoryCubit>().fetchCategories();
-                  context.read<HomeCubit>().loadHomeData();
-                  Navigator.pop(context);
-                },
+                // Türkmence arayüz dili 'tr' koduyla temsil edilir (app_tr.arb).
+                onPressed: () => _changeLanguage(context, const Locale('tr')),
                 style: ConstantsButtonStyle.elevatedButtonStyleOrange,
                 child: Text(
                   'Türkmençe',
@@ -67,14 +66,7 @@ class LanguageDialog extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 5.h),
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  App.of(context)?.setLocale(const Locale('ru'));
-                  // Refetch language-dependent data
-                  context.read<CategoryCubit>().fetchCategories();
-                  context.read<HomeCubit>().loadHomeData();
-
-                  Navigator.pop(context);
-                },
+                onPressed: () => _changeLanguage(context, const Locale('ru')),
                 style: ConstantsButtonStyle.elevatedButtonStyleOrange,
                 child: Text(
                   'Русский',
