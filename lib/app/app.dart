@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.dart';
+import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
+import 'package:new_kitap_chesmesi/core/session/end_user_session.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/forgot/forgot_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_state.dart';
@@ -170,15 +174,51 @@ class _AppState extends State<App> {
   }
 }
 
-/// Giriş / kayıt başarılı olunca kullanıcıya özel ana sayfa verisini yeniler.
+/// Oturum olaylarını uygulama genelinde dinler.
 ///
-/// `HomeCubit` uygulama boyunca yaşar ve ana sayfa yalnızca veri yoksa yükler;
-/// bu dinleyici olmadan misafirin (veya önceki kullanıcının) "önerilen
-/// kitaplar" listesi yeni oturumda da görünmeye devam ederdi.
-class _SessionStartListener extends StatelessWidget {
+/// - Giriş / kayıt başarılı olunca kullanıcıya özel ana sayfa verisini yeniler.
+///   `HomeCubit` uygulama boyunca yaşar ve ana sayfa yalnızca veri yoksa
+///   yükler; bu olmadan misafirin (veya önceki kullanıcının) "önerilen
+///   kitaplar" listesi yeni oturumda da görünmeye devam ederdi.
+/// - Sunucu oturumu reddederse (refresh token geçersiz) kullanıcıyı misafir
+///   durumuna alır ve bilgilendirir; aksi halde ekranda eski kullanıcının
+///   verileri kalır ama her işlem başarısız olurdu.
+class _SessionStartListener extends StatefulWidget {
   const _SessionStartListener({required this.child});
 
   final Widget child;
+
+  @override
+  State<_SessionStartListener> createState() => _SessionStartListenerState();
+}
+
+class _SessionStartListenerState extends State<_SessionStartListener> {
+  StreamSubscription<void>? _sessionExpiredSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _sessionExpiredSub =
+        di<DioClient>().onSessionExpired.listen((_) => _onSessionExpired());
+  }
+
+  @override
+  void dispose() {
+    _sessionExpiredSub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _onSessionExpired() async {
+    await endUserSession(context);
+
+    final messengerContext = scaffoldMessengerKey.currentContext;
+    if (messengerContext == null || !messengerContext.mounted) return;
+    final l10n = AppLocalizations.of(messengerContext);
+    if (l10n == null) return;
+    scaffoldMessengerKey.currentState?.showSnackBar(
+      SnackBar(content: Text(l10n.sessionExpired)),
+    );
+  }
 
   void _refreshUserScopedData(BuildContext context) {
     context.read<HomeCubit>().loadHomeData(silentRefresh: true);
@@ -197,7 +237,7 @@ class _SessionStartListener extends StatelessWidget {
           listener: (context, _) => _refreshUserScopedData(context),
         ),
       ],
-      child: child,
+      child: widget.child,
     );
   }
 }

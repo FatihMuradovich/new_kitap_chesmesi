@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:new_kitap_chesmesi/core/service/language_service.dart';
@@ -8,6 +10,7 @@ class DioClient {
   /// Refresh isteğinin kendisi 401 döndüğünde interceptor'ın tekrar refresh denemesini
   /// ve süresi dolmuş access token'ın Authorization'a eklenmesini engeller.
   static const String kSkipTokenRefresh = 'skipTokenRefresh';
+  static const String _kRetried = 'retriedAfterRefresh';
 
   final FlutterSecureStorage secureStorage;
   final TalkerDioLogger talkerDioLogger;
@@ -23,8 +26,7 @@ class DioClient {
       talkerDioLogger,
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final skipRefreshFlow =
-              options.extra[kSkipTokenRefresh] == true;
+          final skipRefreshFlow = options.extra[kSkipTokenRefresh] == true;
           // Refresh endpoint'ine süresi dolmuş Bearer göndermeyi atla
           if (!skipRefreshFlow) {
             final token = await getToken();
@@ -36,8 +38,7 @@ class DioClient {
           }
 
           // Locale header - use API-compatible language code
-          options.headers['Accept-Language'] =
-              _languageService.apiLanguageCode;
+          options.headers['Accept-Language'] = _languageService.apiLanguageCode;
 
           // Ensure language code prefix exists if not already present and not an auth endpoint
           final langSegment = _languageService.apiLanguageCode;
@@ -59,81 +60,89 @@ class DioClient {
         },
         onResponse: (response, handler) => handler.next(response),
         onError: (DioException e, handler) async {
-          // Refresh çağrısı 401 verdiyse sonsuz döngüye girme; hatayı olduğu gibi ilet
-          if (e.requestOptions.extra[kSkipTokenRefresh] == true) {
-            return handler.next(e);
+          final options = e.requestOptions;
+          final shouldTryRefresh = e.response?.statusCode == 401 &&
+              options.extra[kSkipTokenRefresh] != true &&
+              options.extra[_kRetried] != true;
+          if (!shouldTryRefresh) return handler.next(e);
+
+          final newToken = await _validTokenAfter401(options);
+          if (newToken == null) return handler.next(e);
+
+          // Yalnızca bir kez tekrar dene; tekrar da 401 alırsa döngüye girme.
+          options.extra[_kRetried] = true;
+          options.headers['Authorization'] = 'Bearer $newToken';
+          try {
+            return handler.resolve(await _dio.fetch(options));
+          } on DioException catch (retryError) {
+            return handler.next(retryError);
           }
-
-          if (e.response?.statusCode == 401) {
-            final refreshToken = await secureStorage.read(
-              key: Keys.REFRESH_TOKEN,
-            );
-            if (refreshToken != null) {
-              try {
-                // Refresh token endpoint uses {lang}/auth/refresh-token
-                final langCode = _languageService.apiLanguageCode;
-                final response = await _dio.post(
-                  '$langCode/auth/refresh-token',
-                  data: {'refreshToken': refreshToken},
-                  options: Options(
-                    extra: {kSkipTokenRefresh: true},
-                    headers: {
-                      'Accept-Language': _languageService.apiLanguageCode,
-                    },
-                  ),
-                );
-
-                final newAccessToken = response.data['data']['accessToken'];
-                final newRefreshToken = response.data['data']['refreshToken'];
-
-                await secureStorage.write(
-                  key: Keys.TOKEN,
-                  value: newAccessToken,
-                );
-                await secureStorage.write(
-                  key: Keys.REFRESH_TOKEN,
-                  value: newRefreshToken,
-                );
-
-                // Retry original request
-                final options = e.requestOptions;
-                options.headers['Authorization'] = 'Bearer $newAccessToken';
-                options.headers['Accept-Language'] =
-                    _languageService.apiLanguageCode;
-
-                // Ensure language prefix exists for retried request (skip auth endpoints)
-                final retryPath = options.path.startsWith('/')
-                    ? options.path.substring(1)
-                    : options.path;
-                final isAuthRetry = retryPath.startsWith('auth/');
-                final alreadyPrefixed = retryPath.startsWith('tm/') ||
-                    retryPath.startsWith('ru/') ||
-                    retryPath.startsWith('en/');
-                if (!isAuthRetry && !alreadyPrefixed) {
-                  options.path =
-                      '${_languageService.apiLanguageCode}/$retryPath';
-                }
-
-                final cloneReq = await _dio.fetch(options);
-                return handler.resolve(cloneReq);
-              } catch (refreshError) {
-                // Ağ hatasında token silme — kullanıcı "çıkış yapmış" gibi olmasın
-                if (refreshError is DioException) {
-                  final status = refreshError.response?.statusCode;
-                  final isAuthRejected =
-                      status == 401 || status == 403 || status == 400;
-                  if (isAuthRejected) {
-                    await secureStorage.delete(key: Keys.TOKEN);
-                    await secureStorage.delete(key: Keys.REFRESH_TOKEN);
-                  }
-                }
-              }
-            }
-          }
-          return handler.next(e);
         },
       ),
     ]);
+  }
+
+  final _sessionExpired = StreamController<void>.broadcast();
+
+  /// Sunucu refresh token'ı reddettiğinde (oturum gerçekten bittiğinde)
+  /// bir kez tetiklenir. Ağ hatalarında tetiklenmez.
+  Stream<void> get onSessionExpired => _sessionExpired.stream;
+
+  /// Devam eden yenileme. Aynı anda 401 alan tüm istekler bunu bekler;
+  /// sunucu her yenilemede yeni refresh token verdiği için ikinci bir
+  /// paralel yenileme eski token'la reddedilip oturumu düşürürdü.
+  Future<String?>? _refreshInFlight;
+
+  /// 401 alan istek için kullanılacak geçerli access token'ı döner,
+  /// alınamazsa null.
+  Future<String?> _validTokenAfter401(RequestOptions failed) async {
+    // İstek gönderildikten sonra başka bir istek token'ı zaten yenilemiş
+    // olabilir; o zaman yeniden yenilemeye gerek yok.
+    final sentHeader = failed.headers['Authorization'];
+    final current = await getToken();
+    if (current != null && sentHeader != 'Bearer $current') return current;
+
+    final inFlight = _refreshInFlight;
+    if (inFlight != null) return inFlight;
+
+    final refresh = _refreshAccessToken();
+    _refreshInFlight = refresh;
+    try {
+      return await refresh;
+    } finally {
+      _refreshInFlight = null;
+    }
+  }
+
+  Future<String?> _refreshAccessToken() async {
+    final refreshToken = await secureStorage.read(key: Keys.REFRESH_TOKEN);
+    if (refreshToken == null) return null;
+
+    try {
+      final langCode = _languageService.apiLanguageCode;
+      final response = await _dio.post(
+        '$langCode/auth/refresh-token',
+        data: {'refreshToken': refreshToken},
+        options: Options(extra: {kSkipTokenRefresh: true}),
+      );
+
+      final String newAccessToken = response.data['data']['accessToken'];
+      final String newRefreshToken = response.data['data']['refreshToken'];
+      await addToken(newAccessToken, newRefreshToken);
+      return newAccessToken;
+    } on DioException catch (err) {
+      final status = err.response?.statusCode;
+      final isAuthRejected = status == 401 || status == 403 || status == 400;
+      // Ağ hatasında token silme — kullanıcı "çıkış yapmış" gibi olmasın.
+      if (isAuthRejected) {
+        await clearTokens();
+        _sessionExpired.add(null);
+      }
+      return null;
+    } catch (_) {
+      // Beklenmeyen yanıt biçimi: oturumu silmeden hatayı ilet.
+      return null;
+    }
   }
 
   Dio get dio => _dio;
