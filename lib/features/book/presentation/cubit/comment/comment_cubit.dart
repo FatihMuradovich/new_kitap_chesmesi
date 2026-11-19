@@ -33,17 +33,12 @@ class CommentCubit extends Cubit<CommentState> {
         rating: rating,
         bookId: bookId,
       );
-      
-      final createdComment = await commentRepository.createComment(commentCreateModel);
+
+      final createdComment =
+          await commentRepository.createComment(commentCreateModel);
+      // Listeyi yenilemek çağıran sayfanın işi (pop(true) sonrası). Burada
+      // yenilemek, sayfa kapanıp cubit kapatıldıktan sonra emit'e yol açar.
       emit(CommentCreated(comment: createdComment));
-      
-      // Yorumları yeniden yükle - hata olursa sadece log et, başarı mesajını etkileme
-      try {
-        await getCommentsByBookId(bookId);
-      } catch (e) {
-        debugPrint('Comment listesi yüklenirken hata: $e');
-        // CommentCreated state'i zaten emit edildi, bu hata kullanıcıyı etkilemez
-      }
     } catch (e) {
       debugPrint('Comment oluşturma hatası: $e');
       emit(CommentCreateError(message: e.toString()));

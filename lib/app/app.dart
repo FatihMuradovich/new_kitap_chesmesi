@@ -10,9 +10,6 @@ import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/register_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_code/register_code_cubit.dart';
-import 'package:new_kitap_chesmesi/features/book/presentation/cubit/getBookByAuthorId/book_by_author_id_cubit.dart';
-import 'package:new_kitap_chesmesi/features/book/presentation/cubit/getBookById/get_book_by_id_cubit.dart';
-import 'package:new_kitap_chesmesi/features/book/presentation/cubit/comment/comment_cubit.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/category_cubit.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/cubit/subcategory_cubit.dart';
 import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/favorite_cubit.dart';
@@ -91,22 +88,12 @@ class _AppState extends State<App> {
         // BlocProvider(
         //     create: (_) => di<DiscountedBookCubit>()..fetchDiscountedBooks()),
         BlocProvider(create: (_) => di<BannerCubit>()..fetchBannerImages()),
-        // Book detail
-        BlocProvider(
-          create: (_) => di<GetBookByIdCubit>(),
-        ),
         // Latest book
         // BlocProvider(
         //   create: (_) => di<LatestBookCubit>()..fetchRecentBooks(),
         // ),
         BlocProvider(
-          create: (_) => di<BookByAuthorIdCubit>(),
-        ),
-        BlocProvider(
           create: (_) => di<SearchCubit>(),
-        ),
-        BlocProvider(
-          create: (_) => di<CommentCubit>(),
         ),
 
         // Popup cubit

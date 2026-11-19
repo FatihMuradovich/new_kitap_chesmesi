@@ -32,7 +32,7 @@ import 'package:readmore/readmore.dart';
 // ignore: must_be_immutable
 class BookDetail extends StatefulWidget {
   int id;
-   BookDetail({
+  BookDetail({
     super.key,
     required this.id,
   });
@@ -44,6 +44,13 @@ class BookDetail extends StatefulWidget {
 class _BookDetailState extends State<BookDetail> {
   int _currentImageIndex = 0;
   late PageController _pageController;
+
+  // Her detay sayfası kendi cubit'lerine sahip. Global olduklarında
+  // A → (yazarın diğer kitabı) B → geri dönüşte A sayfası B'nin verisini,
+  // yorumlarını gösteriyor ve "sepete ekle" B'yi ekliyordu.
+  late final GetBookByIdCubit _bookCubit = di<GetBookByIdCubit>();
+  late final CommentCubit _commentCubit = di<CommentCubit>();
+  late final BookByAuthorIdCubit _authorBooksCubit = di<BookByAuthorIdCubit>();
 
   @override
   void initState() {
@@ -61,22 +68,36 @@ class _BookDetailState extends State<BookDetail> {
   }
 
   void _loadBook(int bookId) {
-    context.read<GetBookByIdCubit>().fetchBookById(bookId);
-    context.read<CommentCubit>().getCommentsByBookId(bookId);
+    _bookCubit.fetchBookById(bookId);
+    _commentCubit.getCommentsByBookId(bookId);
   }
 
   void _loadAuthorBooks(int authorId) {
-    context.read<BookByAuthorIdCubit>().fetchBookByAuthorId(authorId);
+    _authorBooksCubit.fetchBookByAuthorId(authorId);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _bookCubit.close();
+    _commentCubit.close();
+    _authorBooksCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _bookCubit),
+        BlocProvider.value(value: _commentCubit),
+        BlocProvider.value(value: _authorBooksCubit),
+      ],
+      child: _buildPage(context),
+    );
+  }
+
+  Widget _buildPage(BuildContext context) {
     return BlocListener<GetBookByIdCubit, GetBookByIdState>(
       listener: (context, state) {
         if (state is BookDetailLoaded) {
@@ -87,289 +108,291 @@ class _BookDetailState extends State<BookDetail> {
         }
       },
       child: Scaffold(
-      body: BlocBuilder<GetBookByIdCubit, GetBookByIdState>(
-        builder: (context, state) {
-          if (state is BookDetailLoading) {
-            return _buildShimmerLoading();
-          } else if (state is BookDetailLoaded) {
-            final bookDetail = state.book;
+        body: BlocBuilder<GetBookByIdCubit, GetBookByIdState>(
+          builder: (context, state) {
+            if (state is BookDetailLoading) {
+              return _buildShimmerLoading();
+            } else if (state is BookDetailLoaded) {
+              final bookDetail = state.book;
 
-            return CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  expandedHeight: 340,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Container(
-                          color: Colors.grey[50],
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 60),
-                            child: AspectRatio(
-                              aspectRatio: 1 / 1,
-                              child: PageView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                controller: _pageController,
-                                itemCount: bookDetail.images.length,
-                                scrollDirection: Axis.horizontal,
-                                onPageChanged: (index) {
-                                  setState(() {
-                                    _currentImageIndex = index;
-                                  });
-                                },
-                                itemBuilder: (context, index) {
-                                  final imageItem = bookDetail.images[index];
-                                  return SizedBox(
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          '${BaseUrl.baseUrl}${imageItem.path}',
-                                      fit: BoxFit.contain,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Page indicator - only show if there are multiple images
-                        if (bookDetail.images.length > 1)
-                          Positioned(
-                            bottom: 16,
-                            left: 0,
-                            right: 0,
-                            child: Center(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10.w,
-                                  vertical: 5.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.6),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: List.generate(
-                                    bookDetail.images.length,
-                                    (index) => Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 2.w),
-                                      width: _currentImageIndex == index
-                                          ? 16.w
-                                          : 8.w,
-                                      height: 5.h,
-                                      decoration: BoxDecoration(
-                                        color: _currentImageIndex == index
-                                            ? Colors.white
-                                            : Colors.white.withValues(alpha: 0.4),
-                                        borderRadius: BorderRadius.circular(4),
+              return CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    expandedHeight: 340,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Container(
+                            color: Colors.grey[50],
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 60),
+                              child: AspectRatio(
+                                aspectRatio: 1 / 1,
+                                child: PageView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  controller: _pageController,
+                                  itemCount: bookDetail.images.length,
+                                  scrollDirection: Axis.horizontal,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      _currentImageIndex = index;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    final imageItem = bookDetail.images[index];
+                                    return SizedBox(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            '${BaseUrl.baseUrl}${imageItem.path}',
+                                        fit: BoxFit.contain,
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    BlocBuilder<FavoriteCubit, FavoriteState>(
-                      builder: (context, state) {
-                        final favoriteCubit = context.read<FavoriteCubit>();
-                        final isFavorite =
-                            favoriteCubit.isBookFavorite(bookDetail.id);
-                        return IconButton(
-                          icon: Icon(
-                            isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: isFavorite ? Colors.red : Colors.black,
-                          ),
-                          onPressed: () async {
-                            final ok = await ensureLoggedIn(context);
-                            if (!ok) return;
-                            // ignore: use_build_context_synchronously
-                            favoriteCubit.toggleFavorite(bookDetail.id);
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 12, right: 12, top: 16),
-                        child: Text(
-                          bookDetail.name,
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            color: Colors.black,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 12),
-                        child: Text(
-                          bookDetail.author!.name,
-                          style: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            color: Colors.black54,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 15.h),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 12),
-                        child: Text(
-                          context.l10n.description,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontFamily: 'Poppins-regular',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 5.w),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 12),
-                        child: ReadMoreText(
-                          bookDetail.desc ?? 'No desc',
-                          trimLines: 8,
-                          trimMode: TrimMode.Line,
-                          trimCollapsedText: ' ${context.l10n.readMore}',
-                          trimExpandedText: ' ${context.l10n.showLess}',
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            color: Colors.black54,
-                            fontSize: 12.sp,
-                          ),
-                          moreStyle: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.bold,
-                            color: CustomColors.orangeColor,
-                          ),
-                          lessStyle: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.bold,
-                            color: CustomColors.orangeColor,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 15.h),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 12),
-                        child: BookSpeciality(
-                          book: bookDetail,
-                        ),
-                      ),
-                      // Combined Rating and Comments Section
-                      SizedBox(height: 20.h),
-                      BlocBuilder<CommentCubit, CommentState>(
-                        builder: (context, commentState) {
-                          return _buildRatingAndCommentsSection(
-                              bookDetail, commentState);
-                        },
-                      ),
-
-                      SizedBox(height: 20.h),
-                      BlocBuilder<BookByAuthorIdCubit, BookByAuthorIdState>(
-                        builder: (context, state) {
-                          if (state is BookByAuthorIdLoaded) {
-                            final authorBooks = state.books;
-                            final anotherBooks = authorBooks
-                                .where((e) =>
-                                    e.id != bookDetail.id &&
-                                    e.status.toLowerCase() == 'available')
-                                .toList();
-
-                            if (anotherBooks.isEmpty) {
-                              return SizedBox.shrink();
-                            }
-
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 12, right: 12),
+                          // Page indicator - only show if there are multiple images
+                          if (bookDetail.images.length > 1)
+                            Positioned(
+                              bottom: 16,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 5.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.6),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        context.l10n.auhtorsOtherBook,
-                                        style: TextStyle(
-                                          fontFamily: 'Poppins-regular',
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.bold,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: List.generate(
+                                      bookDetail.images.length,
+                                      (index) => Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 2.w),
+                                        width: _currentImageIndex == index
+                                            ? 16.w
+                                            : 8.w,
+                                        height: 5.h,
+                                        decoration: BoxDecoration(
+                                          color: _currentImageIndex == index
+                                              ? Colors.white
+                                              : Colors.white
+                                                  .withValues(alpha: 0.4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                       ),
-                                      // GestureDetector(
-                                      //   onTap: () {
-                                      //     // Navigator.push(context, MaterialPageRoute(builder: (context)=>BooksPage(name: context.l10n.auhtorsOtherBook, categoryType: categoryType)))
-                                      //   },
-                                      //   child: Icon(Icons.chevron_right),
-                                      // ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                                SizedBox(height: 5.w),
-                                SizedBox(
-                                  height: 220.w,
-                                  child: ListView.builder(
-                                    // shrinkWrap: true,
-                                    itemExtent: 145.w,
-                                    itemCount: anotherBooks.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return BookItem(
-                                          margin: true,
-                                          book: anotherBooks[index]);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                          return SizedBox.shrink();
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      BlocBuilder<FavoriteCubit, FavoriteState>(
+                        builder: (context, state) {
+                          final favoriteCubit = context.read<FavoriteCubit>();
+                          final isFavorite =
+                              favoriteCubit.isBookFavorite(bookDetail.id);
+                          return IconButton(
+                            icon: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorite ? Colors.red : Colors.black,
+                            ),
+                            onPressed: () async {
+                              final ok = await ensureLoggedIn(context);
+                              if (!ok) return;
+                              // ignore: use_build_context_synchronously
+                              favoriteCubit.toggleFavorite(bookDetail.id);
+                            },
+                          );
                         },
                       ),
                     ],
                   ),
-                ),
-              ],
-            );
-          }
-          return SizedBox.shrink();
-        },
-      ),
-      bottomNavigationBar: BlocBuilder<GetBookByIdCubit, GetBookByIdState>(
-        builder: (context, state) {
-          if (state is BookDetailLoaded) {
-            final bookDetail = state.book;
-            return DetailBottomBar(book: bookDetail);
-          }
-          return SizedBox();
-        },
-      ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 12, right: 12, top: 16),
+                          child: Text(
+                            bookDetail.name,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              color: Colors.black,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
+                          child: Text(
+                            bookDetail.author!.name,
+                            style: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              color: Colors.black54,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
+                          child: Text(
+                            context.l10n.description,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: 'Poppins-regular',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5.w),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
+                          child: ReadMoreText(
+                            bookDetail.desc ?? 'No desc',
+                            trimLines: 8,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: ' ${context.l10n.readMore}',
+                            trimExpandedText: ' ${context.l10n.showLess}',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              color: Colors.black54,
+                              fontSize: 12.sp,
+                            ),
+                            moreStyle: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColors.orangeColor,
+                            ),
+                            lessStyle: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColors.orangeColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
+                          child: BookSpeciality(
+                            book: bookDetail,
+                          ),
+                        ),
+                        // Combined Rating and Comments Section
+                        SizedBox(height: 20.h),
+                        BlocBuilder<CommentCubit, CommentState>(
+                          builder: (context, commentState) {
+                            return _buildRatingAndCommentsSection(
+                                bookDetail, commentState);
+                          },
+                        ),
+
+                        SizedBox(height: 20.h),
+                        BlocBuilder<BookByAuthorIdCubit, BookByAuthorIdState>(
+                          builder: (context, state) {
+                            if (state is BookByAuthorIdLoaded) {
+                              final authorBooks = state.books;
+                              final anotherBooks = authorBooks
+                                  .where((e) =>
+                                      e.id != bookDetail.id &&
+                                      e.status.toLowerCase() == 'available')
+                                  .toList();
+
+                              if (anotherBooks.isEmpty) {
+                                return SizedBox.shrink();
+                              }
+
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 12, right: 12),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          context.l10n.auhtorsOtherBook,
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins-regular',
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        // GestureDetector(
+                                        //   onTap: () {
+                                        //     // Navigator.push(context, MaterialPageRoute(builder: (context)=>BooksPage(name: context.l10n.auhtorsOtherBook, categoryType: categoryType)))
+                                        //   },
+                                        //   child: Icon(Icons.chevron_right),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.w),
+                                  SizedBox(
+                                    height: 220.w,
+                                    child: ListView.builder(
+                                      // shrinkWrap: true,
+                                      itemExtent: 145.w,
+                                      itemCount: anotherBooks.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return BookItem(
+                                            margin: true,
+                                            book: anotherBooks[index]);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            return SizedBox.shrink();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            return SizedBox.shrink();
+          },
+        ),
+        bottomNavigationBar: BlocBuilder<GetBookByIdCubit, GetBookByIdState>(
+          builder: (context, state) {
+            if (state is BookDetailLoaded) {
+              final bookDetail = state.book;
+              return DetailBottomBar(book: bookDetail);
+            }
+            return SizedBox();
+          },
+        ),
       ),
     );
   }
@@ -681,7 +704,7 @@ class _BookDetailState extends State<BookDetail> {
 
     // If comment was added successfully, refresh comments
     if (result == true && mounted) {
-      context.read<CommentCubit>().getCommentsByBookId(widget.id);
+      _commentCubit.getCommentsByBookId(widget.id);
     }
   }
 

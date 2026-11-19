@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
 import 'package:new_kitap_chesmesi/common/utils/notification_helper.dart';
 import 'package:new_kitap_chesmesi/common/widgets/custom_button.dart';
@@ -29,15 +30,24 @@ class _AddCommentPageState extends State<AddCommentPage> {
   final TextEditingController _commentController = TextEditingController();
   double _selectedRating = 0;
   bool _isSubmitting = false;
+  late final CommentCubit _commentCubit = di<CommentCubit>();
 
   @override
   void dispose() {
     _commentController.dispose();
+    _commentCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: _commentCubit,
+      child: _buildPage(context),
+    );
+  }
+
+  Widget _buildPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -55,7 +65,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
               context,
               context.l10n.commentAddedSuccessfully,
             );
-            
+
             Navigator.of(context)
                 .pop(true); // true döndürerek yenileme sinyali gönder
           } else if (state is CommentCreateError) {
@@ -274,10 +284,10 @@ class _AddCommentPageState extends State<AddCommentPage> {
       return;
     }
 
-    context.read<CommentCubit>().createComment(
-          comment: _commentController.text.trim(),
-          rating: _selectedRating,
-          bookId: widget.bookId,
-        );
+    _commentCubit.createComment(
+      comment: _commentController.text.trim(),
+      rating: _selectedRating,
+      bookId: widget.bookId,
+    );
   }
 }

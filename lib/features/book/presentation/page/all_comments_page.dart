@@ -29,16 +29,30 @@ class AllCommentsPage extends StatefulWidget {
 }
 
 class _AllCommentsPageState extends State<AllCommentsPage> {
+  // Sayfaya özel: global olsaydı açık olan detay sayfasının yorumlarını ezerdi.
+  late final CommentCubit _commentCubit = di<CommentCubit>();
+
   @override
   void initState() {
     super.initState();
-    // Comments should already be loaded from book detail page
-    // But we can refresh them if needed
-    context.read<CommentCubit>().getCommentsByBookId(widget.bookId);
+    _commentCubit.getCommentsByBookId(widget.bookId);
+  }
+
+  @override
+  void dispose() {
+    _commentCubit.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: _commentCubit,
+      child: _buildPage(context),
+    );
+  }
+
+  Widget _buildPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -246,7 +260,6 @@ class _AllCommentsPageState extends State<AllCommentsPage> {
     );
   }
 
-
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -341,7 +354,7 @@ class _AllCommentsPageState extends State<AllCommentsPage> {
             SizedBox(height: 32.h),
             ElevatedButton.icon(
               onPressed: () {
-                context.read<CommentCubit>().getCommentsByBookId(widget.bookId);
+                _commentCubit.getCommentsByBookId(widget.bookId);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColors.orangeColor,
@@ -379,8 +392,7 @@ class _AllCommentsPageState extends State<AllCommentsPage> {
 
     // If comment was added successfully, refresh comments
     if (result == true && mounted) {
-      context.read<CommentCubit>().getCommentsByBookId(widget.bookId);
+      _commentCubit.getCommentsByBookId(widget.bookId);
     }
   }
-
 }
