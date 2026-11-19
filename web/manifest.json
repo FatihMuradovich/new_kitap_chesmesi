@@ -1,11 +1,11 @@
 {
-    "name": "new_kitap_chesmesi",
-    "short_name": "new_kitap_chesmesi",
+    "name": "Kitap Çeşmesi",
+    "short_name": "Kitap Çeşmesi",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
+    "background_color": "#FF9800",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Kitap Çeşmesi - Kitap alışveriş uygulaması",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

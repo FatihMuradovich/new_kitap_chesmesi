@@ -1,38 +1,40 @@
-import 'package:fluentui_icons/fluentui_icons.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_kitap_chesmesi/common/constants/base_url.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
 import 'package:new_kitap_chesmesi/features/book/domain/model/book_model.dart';
-import 'package:new_kitap_chesmesi/features/book/presentation/page/book_detail.dart';
-import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/cubit.dart';
-import 'package:new_kitap_chesmesi/features/navBar/cubit/nav_bar_cubit.dart';
+import 'package:new_kitap_chesmesi/app/di.dart';
+import 'package:new_kitap_chesmesi/app/router/app_router.dart';
+import 'package:new_kitap_chesmesi/app/router/app_router.gr.dart';
+import 'package:new_kitap_chesmesi/common/utils/auth_guard.dart';
+import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/favorite_state.dart';
+import 'package:new_kitap_chesmesi/localization/localization.dart';
 
 // ignore: must_be_immutable
 class BookItem extends StatelessWidget {
   final BookModel book;
-  bool margin = false;
-  // BookModel book;
-  BookItem({super.key, required this.margin, required this.book});
 
-  // var bookList = <BookModel>[];
+  bool margin = false;
+
+  BookItem({
+    super.key,
+    required this.margin,
+    required this.book,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: () {
-      context.read<NavBarCubit>().hideNavBar();
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => BookDetail(book: book,))).then((_) {
-        // Geri dönüldüğünde navbar tekrar gösterilir
-        context.read<NavBarCubit>().showNavBar();
-      });
-    }, child: BlocBuilder<FavoriteCubit, FavoriteState>(
-      builder: (context, state) {
-        bool isFavorite = false;
-        if (state is FavoriteLoaded) {
-          isFavorite = state.favorites.contains(book);
-        }
-        return Container(
+    final hasDiscount = book.hasDiscount;
+    return GestureDetector(
+        onTap: () {
+          // final navBarCubit = context.read<NavBarCubit>();
+          // navBarCubit.hideNavBar();
+          di<AppRouter>().push(BookDetailRoute(id: book.id));
+        },
+        child: Container(
           margin: margin
               ? const EdgeInsets.only(left: 12, bottom: 8, top: 5)
               : const EdgeInsets.all(0),
@@ -48,49 +50,75 @@ class BookItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.grey[100],
                       ),
-                      child: Image(
-                        image: book.backgroundImageHard == null
-                            ? AssetImage('assets/images/1.png')
-                            : NetworkImage(book.backgroundImageHard as String),
-                        fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        imageUrl: '${BaseUrl.baseUrl}${book.images[0].path}',
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
                   ),
                   Positioned(
                     right: -3,
                     top: -4,
-                    child: IconButton(
-                      icon: Icon(
-                        isFavorite
-                            ? FluentSystemIcons.ic_fluent_heart_filled
-                            : FluentSystemIcons.ic_fluent_heart_regular,
-                        // color: Colors.red,
-                      ),
-                      onPressed: () {
-                        context.read<FavoriteCubit>().toggleFavorite(book);
+                    child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                      builder: (context, state) {
+                        final favoriteCubit = context.read<FavoriteCubit>();
+                        final isFavorite =
+                            favoriteCubit.isBookFavorite(book.id);
+                        // final isUpdating = state is FavoriteLoaded &&
+                        //     state.updatingBookId == book.id;
+
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : Colors.black,
+                              ),
+                              onPressed: () async {
+                                final ok = await ensureLoggedIn(context);
+                                if (!ok) return;
+                                // ignore: use_build_context_synchronously
+                                favoriteCubit.toggleFavorite(book.id);
+                              },
+                            ),
+                          ],
+                        );
                       },
                     ),
                   ),
+                  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
+                  // // Stokta yok ama getirtilebilir — kullanıcı listede ayırt
+                  // // edebilsin (SPECIAL-ORDER-API.md §7).
+                  // if (book.isSpecialOrderable)
                   // Positioned(
-                  //   right: -1,
-                  //   top: -3,
-                  //   child: BlocBuilder<FavoritesCubit, FavoritesState>(
-                  //     builder: (context, state) {
-                  //       return IconButton(
-                  //         icon: Icon(
-                  //           widget.book.isFavorite
-                  //               ? FluentSystemIcons.ic_fluent_heart_filled
-                  //               : FluentSystemIcons.ic_fluent_heart_regular,
-                  //           color: widget.book.isFavorite ? Colors.red : null,
-                  //         ),
-                  //         onPressed: () {
-                  //           context
-                  //               .read<FavoritesCubit>()
-                  //               .toggleFavorite(widget.book);
-                  //         },
-                  //       );
-                  //     },
-                  //   ),
+                  // left: 4,
+                  // bottom: 4,
+                  // child: Container(
+                  // padding: EdgeInsets.symmetric(
+                  // horizontal: 6.w,
+                  // vertical: 2.h,
+                  // ),
+                  // decoration: BoxDecoration(
+                  // color: CustomColors.orangeColor,
+                  // borderRadius: BorderRadius.circular(999),
+                  // ),
+                  // child: Text(
+                  // context.l10n.specialOrderBadge,
+                  // style: TextStyle(
+                  // color: Colors.white,
+                  // fontFamily: 'Poppins-regular',
+                  // fontSize: 9.sp,
+                  // fontWeight: FontWeight.w600,
+                  // ),
+                  // ),
+                  // ),
                   // ),
                 ],
               ),
@@ -100,45 +128,75 @@ class BookItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontFamily: 'Poppins-black',
-                  fontSize: 14.sp,
+                  color: Colors.black,
+                  fontFamily: 'Poppins-regular',
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                book.author,
+                book.author!.name.toString(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style:
-                    TextStyle(fontSize: 12.sp, fontFamily: 'Poppins-regular'),
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 10.sp,
+                  fontFamily: 'Poppins-regular',
+                ),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    book.priceHardcover.toString(),
-                    // '${widget.book.priceSoftcover} TMT',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: CustomColors.orangeColor,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins-black',
-                    ),
+
+              SizedBox(height: 2.h),
+              // _BookRatingStars(book: book),
+              // `Finished` kitapta fiyat null gelir — formatlamak yerine
+              // "ýörite sargyt" yazılır (SPECIAL-ORDER-API.md §4).
+              if (!book.hasPrice)
+                Text(
+                  context.l10n.priceOnRequest,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: CustomColors.orangeColor,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins-regular',
                   ),
-                  const SizedBox(width: 2),
-                  Text(
-                    book.priceHardcover.toString(),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.black26,
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: Colors.black26,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins-black',
+                )
+              else if (hasDiscount)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${book.discountedPrice.toStringAsFixed(2)} m.',
+                      style: TextStyle(
+                        color: CustomColors.orangeColor,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins-black',
+                        fontSize: 12.sp,
+                      ),
                     ),
+                    SizedBox(width: 10),
+                    Text(
+                      '${book.priceValue.toStringAsFixed(2)} m.',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.lineThrough,
+                        fontFamily: 'Poppins-regular',
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Text(
+                  '${book.priceValue.toStringAsFixed(2)} m.',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: CustomColors.orangeColor,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins-black',
                   ),
-                ],
-              ),
+                ),
               // SizedBox(
               //   height: 35,
               //   width: double.infinity,
@@ -158,8 +216,6 @@ class BookItem extends StatelessWidget {
               // ),
             ],
           ),
-        );
-      },
-    ));
+        ));
   }
 }

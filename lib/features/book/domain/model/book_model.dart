@@ -1,141 +1,315 @@
-import 'package:equatable/equatable.dart';
+import 'package:new_kitap_chesmesi/features/category/domain/model/category_model.dart';
+import 'package:new_kitap_chesmesi/features/category/domain/model/subcategory_model.dart';
 
+class BookModel {
+  final int id;
+  final String name;
+  final String? desc;
+  final String? productCode;
+  final int? authorId;
 
-// ignore: must_be_immutable
-class BookModel extends Equatable {
-  int id;
-  String code;
-  String name;
-  String author;
-  String description;
-  int categoryId;
-  int subcategoryId;
-  int discountId;
-  double? priceHardcover;
-  double? priceSoftcover;
-  int? stockHardcover;
-  int? stockSoftcover;
-  String language;
-  String publisher;
-  int publishYear;
-  int page;
-  String? backgroundImageHard;
-  String? backgroundImageSoft;
-  bool isFavorite;
-  bool new_added;
-  bool hot;
+  /// `Decimal` olduğu için string gelir.
+  ///
+  /// **`status == Finished` olan kitaplarda `null`** — stoku bitmiş kitabın
+  /// fiyatı artık katalogdan değil, özel sipariş teklifinden belirleniyor
+  /// (SPECIAL-ORDER-API.md §4). Doğrudan formatlamayın: [hasPrice] ile kontrol
+  /// edip fiyat yerine "Ýörite sargyt" yazın.
+  final String? price;
+  final String? rating;
+
+  /// `status == Finished` olan kitaplarda `discount`/`discountType` de `null` —
+  /// indirim rozeti çizilmez ([hasDiscount]).
+  final String? discountType;
+  final String? discount;
+  final String status;
+
+  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
+  // /// Kitap özel siparişe (yurtdışından getirtmeye) açık mı (§2).
+  // final bool specialOrderable;
+  final int stock;
+  final String? cover;
+  final int? pageCount;
+  final int? languageId;
+  final int? publishYear;
+  final int? publisherId;
+  final int? categoryId;
+  final int? subcategoryId;
+  final List<int> categoryIds;
+  final List<int> subcategoryIds;
+  final DateTime? createdAt;
+  final CategoryModel? category;
+  final SubcategoryModel? subcategory;
+  final Author? author;
+  final Publisher? publisher;
+  final Language? language;
+  final List<ImageModel> images;
 
   BookModel({
     required this.id,
-    required this.code,
     required this.name,
-    required this.author,
-    required this.description,
-    required this.categoryId,
-    required this.subcategoryId,
-    required this.discountId,
-    required this.priceHardcover,
-    required this.priceSoftcover,
-    required this.stockHardcover,
-    required this.stockSoftcover,
-    required this.language,
-    required this.publisher,
-    required this.publishYear,
-    required this.page,
-    required this.backgroundImageHard,
-    required this.backgroundImageSoft,
-    required this.hot,
-    required this.new_added,
-    this.isFavorite = false,
+    required this.price,
+    this.rating,
+    this.discountType,
+    this.discount,
+    required this.status,
+    required this.createdAt,
+    required this.stock,
+    required this.images,
+    // this.specialOrderable = false,
+    this.desc,
+    this.productCode,
+    this.authorId,
+    this.cover,
+    this.pageCount,
+    this.languageId,
+    this.publishYear,
+    this.publisherId,
+    this.categoryId,
+    this.subcategoryId,
+    this.categoryIds = const [],
+    this.subcategoryIds = const [],
+    this.category,
+    this.subcategory,
+    this.author,
+    this.publisher,
+    this.language,
   });
 
-  // Factory method to create a BookModel from JSON
-  factory BookModel.fromJson(Map<String, dynamic> json) {
-    
+  /// Kitabın gösterilebilir bir fiyatı var mı. `Finished` kitaplarda `false`;
+  /// bu durumda fiyat yerine "Ýörite sargyt" yazılır (SPECIAL-ORDER-API.md §4).
+  bool get hasPrice => price != null && price!.trim().isNotEmpty;
+
+  /// Fiyatı olmayan kitapta `0` — hesaplarda güvenli olsun diye.
+  /// **Ekrana basmadan önce [hasPrice] kontrol edin**, yoksa "0.00 m." gösterirsiniz.
+  double get priceValue => double.tryParse(price ?? '') ?? 0;
+
+  double get discountValue => double.tryParse(discount ?? '') ?? 0;
+
+  /// İndirim rozeti çizilir mi. `Finished` kitaplarda `discount` da `null`
+  /// geldiği için kendiliğinden `false`.
+  bool get hasDiscount => hasPrice && discountValue > 0;
+
+  double get ratingValue {
+    final parsed = double.tryParse(rating?.trim() ?? '');
+    if (parsed == null) return 0;
+    return parsed.clamp(0.0, 5.0);
+  }
+
+  /// Backend'in kitap durumları (SPECIAL-ORDER-API.md §4):
+  /// `Available` | `Upcoming` | `Finished`.
+  bool get isFinished => status.toLowerCase() == 'finished';
+
+  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
+  // /// "Özel sipariş ver" butonu / rozeti yalnızca bu doğruysa çizilir.
+  // bool get isSpecialOrderable => isFinished && specialOrderable;
+
+  double get discountedPrice {
+    if (discountType?.toLowerCase() == 'percent') {
+      return priceValue - (priceValue * discountValue / 100);
+    } else if (discountType?.toLowerCase() == 'amount') {
+      return priceValue - discountValue;
+    }
+    return priceValue;
+  }
+
+  BookModel copyWith({
+    int? id,
+    String? name,
+    String? price,
+    String? rating,
+    String? discountType,
+    String? discount,
+    String? status,
+    // bool? specialOrderable,
+    DateTime? createdAt,
+    int? stock,
+    List<ImageModel>? images,
+    String? desc,
+    String? productCode,
+    int? authorId,
+    String? cover,
+    int? pageCount,
+    int? languageId,
+    int? publishYear,
+    int? publisherId,
+    int? categoryId,
+    int? subcategoryId,
+    List<int>? categoryIds,
+    List<int>? subcategoryIds,
+    CategoryModel? category,
+    SubcategoryModel? subcategory,
+    Author? author,
+    Publisher? publisher,
+    Language? language,
+  }) {
     return BookModel(
-      id: json['id'],
-      code: json['code'],
-      name: json['name'],
-      author: json['author'],
-      description: json['description'],
-      categoryId: json['category'],
-      subcategoryId: json['subcategory'],
-      discountId: json['discount'],
-      priceHardcover: _parseDouble(json['price_hardcover']),
-      priceSoftcover: _parseDouble(json['price_softcover']),
-      stockHardcover: json['stock_hardcover'],
-      stockSoftcover: json['stock_softcover'],
-      language: json['language'],
-      publisher: json['publisher'],
-      publishYear: json['publish_year'],
-      page: json['page'],
-      new_added: json['newly_added'],
-      hot: json['hot'],
-      backgroundImageHard: json['background_image_hard'],
-      backgroundImageSoft: json['background_image_soft'],
-   // Default value if not provided
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      rating: rating ?? this.rating,
+      discountType: discountType ?? this.discountType,
+      discount: discount ?? this.discount,
+      status: status ?? this.status,
+      // specialOrderable: specialOrderable ?? this.specialOrderable,
+      createdAt: createdAt ?? this.createdAt,
+      stock: stock ?? this.stock,
+      images: images ?? this.images,
+      desc: desc ?? this.desc,
+      productCode: productCode ?? this.productCode,
+      authorId: authorId ?? this.authorId,
+      cover: cover ?? this.cover,
+      pageCount: pageCount ?? this.pageCount,
+      languageId: languageId ?? this.languageId,
+      publishYear: publishYear ?? this.publishYear,
+      publisherId: publisherId ?? this.publisherId,
+      categoryId: categoryId ?? this.categoryId,
+      subcategoryId: subcategoryId ?? this.subcategoryId,
+      categoryIds: categoryIds ?? this.categoryIds,
+      subcategoryIds: subcategoryIds ?? this.subcategoryIds,
+      category: category ?? this.category,
+      subcategory: subcategory ?? this.subcategory,
+      author: author ?? this.author,
+      publisher: publisher ?? this.publisher,
+      language: language ?? this.language,
     );
   }
 
-  // Helper method to parse price fields as double
-  static double _parseDouble(dynamic value) {
-    if (value is String) {
-      return double.tryParse(value) ?? 0.0; // Fallback to 0.0 if parsing fails
-    }
-    if (value is int) {
-      return value.toDouble();
-    }
-    return value?.toDouble() ?? 0.0; // Default to 0.0 if value is null
+  factory BookModel.fromMap(Map<String, dynamic> map) {
+    return BookModel(
+      id: map['id'] as int,
+      name: map['name'] as String,
+      desc: map['desc'] as String?,
+      productCode: map['productCode'] as String?,
+      authorId: map['authorId'] as int?,
+      // `Finished` kitaplarda null gelir — cast etme (§4).
+      price: map['price']?.toString(),
+      rating: map['rating']?.toString(),
+      discountType: map['discountType'] as String?,
+      discount: map['discount'] as String?,
+      status: map['status'] as String,
+      // specialOrderable: map['specialOrderable'] as bool? ?? false,
+      stock: map['stock'] as int,
+      cover: map['cover'] as String?,
+      pageCount: map['pageCount'] as int?,
+      languageId: map['languageId'] as int?,
+      publishYear: map['publishYear'] as int?,
+      publisherId: map['publisherId'] as int?,
+      categoryId: map['categoryId'] as int?,
+      subcategoryId: map['subcategoryId'] as int?,
+      categoryIds: _parseIdList(map['categories']),
+      subcategoryIds: _parseIdList(map['subcategories']),
+      createdAt: (map['createdAt'] as String?) != null
+          ? DateTime.parse(map['createdAt'] as String)
+          : null,
+      images: List<ImageModel>.from(
+        (map['images'] as List).map<ImageModel>(
+          (x) => ImageModel.fromJson(x as Map<String, dynamic>),
+        ),
+      ),
+      // category: map['category'] != null
+      //     ? CategoryModel.fromMap(map['category'] as Map<String, dynamic>)
+      //     : null,
+      // subcategory: map['subcategory'] != null
+      //     ? SubcategoryModel.fromMap(map['subcategory'] as Map<String, dynamic>)
+      //     : null,
+      author: map['author'] != null
+          ? Author.fromJson(map['author'] as Map<String, dynamic>)
+          : null,
+      publisher: map['publisher'] != null
+          ? Publisher.fromJson(map['publisher'] as Map<String, dynamic>)
+          : null,
+      language: map['language'] != null
+          ? Language.fromJson(map['language'] as Map<String, dynamic>)
+          : null,
+    );
   }
 
-  // Method to convert BookModel to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'code': code,
-      'name': name,
-      'author': author,
-      'description': description,
-      'category': categoryId,
-      'subcategory': subcategoryId,
-      'discount': discountId,
-      'price_hardcover': priceHardcover,
-      'price_softcover': priceSoftcover,
-      'stock_hardcover': stockHardcover,
-      'stock_softcover': stockSoftcover,
-      'language': language,
-      'publisher': publisher,
-      'publish_year': publishYear,
-      'page': page,
-      'background_image_hard': backgroundImageHard,
-      'background_image_soft': backgroundImageSoft,
-      'newly_added': new_added,
-      'hot': hot
-    };
+  static List<int> _parseIdList(dynamic value) {
+    if (value is! List) return const [];
+    return value
+        .map((item) {
+          if (item is Map<String, dynamic>) {
+            return (item['id'] as num?)?.toInt();
+          }
+          return (item as num?)?.toInt();
+        })
+        .whereType<int>()
+        .toList();
   }
 
-  @override
-  List<Object?> get props => [
-        id,
-        code,
-        name,
-        author,
-        description,
-        categoryId,
-        subcategoryId,
-        discountId,
-        priceHardcover,
-        priceSoftcover,
-        stockHardcover,
-        stockSoftcover,
-        language,
-        publisher,
-        publishYear,
-        page,
-        backgroundImageHard,
-        backgroundImageSoft,
-        isFavorite,
-        new_added,
-        hot
-      ];
+  bool belongsToSubcategory(int id) => subcategoryIds.contains(id);
+}
+
+class Author {
+  final int id;
+  final String name;
+  final String? image;
+  final String? desc;
+
+  Author({
+    required this.id,
+    required this.name,
+    this.image,
+    this.desc,
+  });
+
+  factory Author.fromJson(Map<String, dynamic> json) {
+    return Author(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      image: json['image'] as String?,
+      desc: json['desc'] as String?,
+    );
+  }
+}
+
+class Publisher {
+  final int id;
+  final String name;
+
+  Publisher({
+    required this.id,
+    required this.name,
+  });
+
+  factory Publisher.fromJson(Map<String, dynamic> json) {
+    return Publisher(
+      id: json['id'] as int,
+      name: json['name'] as String,
+    );
+  }
+}
+
+class Language {
+  final int id;
+  final String name;
+
+  Language({
+    required this.id,
+    required this.name,
+  });
+
+  factory Language.fromJson(Map<String, dynamic> json) {
+    return Language(
+      id: json['id'] as int,
+      name: json['name'] as String,
+    );
+  }
+}
+
+class ImageModel {
+  final int id;
+  final String path;
+
+  ImageModel({
+    required this.id,
+    required this.path,
+  });
+
+  factory ImageModel.fromJson(Map<String, dynamic> json) {
+    return ImageModel(
+      id: json['id'] as int,
+      path: json['path'] as String,
+    );
+  }
 }

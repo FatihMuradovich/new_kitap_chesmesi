@@ -1,8 +1,8 @@
 name: new_kitap_chesmesi
-description: "A new Flutter project."
+description: "Kitap Çeşmesi"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.1.8+12
 
 environment:
   sdk: ^3.6.1
@@ -38,12 +38,11 @@ dependencies:
   country_code_picker: ^3.3.0
   carousel_slider: ^5.0.0
   persistent_bottom_nav_bar: ^6.2.1
-  fluentui_icons: ^1.0.0
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
-  
-  
-  intl: ^0.19.0
+  cached_network_image: ^3.4.1
+
+  intl: ^0.20.2
   flutter_localizations:
     sdk: flutter
   get_it: ^8.0.3
@@ -52,8 +51,27 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   talker_dio_logger: ^4.8.0
   talker_bloc_logger: ^4.8.0
-
-
+  iconoir_flutter: ^7.11.0
+  firebase_core: ^3.15.1
+  firebase_messaging: ^15.2.9
+  pinput: ^5.0.1
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.1
+  flutter_rating_bar: ^4.0.1
+  connectivity_plus: ^6.0.5
+  shimmer: ^3.0.0
+  flutter_gen: ^5.12.0
+  readmore: ^3.0.0
+  flutter_html: ^3.0.0-beta.2
+  flutter_local_notifications: ^18.0.1
+  http: ^1.2.2
+  # html 0.15.7 removed the internal matches() that flutter_html 3.0.0 relies on
+  html: 0.15.6
+  lottie: ^3.3.2
+  app_version_update: ^6.2.0
+  package_info_plus: ^9.0.0
+  auto_route: ^9.3.0
+  fluentui_icons: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +83,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+  build_runner: ^2.4.13
+  auto_route_generator: ^9.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -80,8 +101,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo/
-    - assets/images/
     - assets/icons/
+    - assets/animations/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -101,13 +122,26 @@ flutter:
         - asset: assets/fonts/big-caslon-medium.ttf
     - family: LibreBaskerville
       fonts:
-        - asset: assets/fonts/LibreBaskerville-Bold.ttf    
+        - asset: assets/fonts/LibreBaskerville-Bold.ttf
     - family: Poppins-black
       fonts:
         - asset: assets/fonts/Poppins-Black.ttf
     - family: Poppins-regular
       fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf        
+        - asset: assets/fonts/Poppins-Regular.ttf
+    - family: Inter-Bold
+      fonts:
+        - asset: assets/fonts/Inter-Bold.ttf
+    - family: Inter-ExtraBold
+      fonts:
+        - asset: assets/fonts/Inter-ExtraBold.ttf
+    - family: RobotoSlab-Black
+      fonts:
+        - asset: assets/fonts/RobotoSlab-Black.ttf
+    - family: RobotoSlab-Regular
+      fonts:
+        - asset: assets/fonts/RobotoSlab-Regular.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
@@ -118,3 +152,24 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Flutter Launcher Icons Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/app_icon.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/logo/app_icon.png"
+    background_color: "#FF9800"
+  windows:
+    generate: true
+    image_path: "assets/logo/app_icon.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "assets/logo/app_icon.png"
+  adaptive_icon_background: "#FF9800"
+  adaptive_icon_foreground: "assets/logo/app_icon.png"

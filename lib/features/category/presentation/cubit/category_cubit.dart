@@ -7,14 +7,14 @@ import 'package:new_kitap_chesmesi/features/category/domain/repository/category_
 part 'category_state.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
-  final CategoryRepository repository;
+  final CategoryRepository categoryRepository;
 
-  CategoryCubit({required this.repository}) : super(CategoryInitial());
+  CategoryCubit({required this.categoryRepository}) : super(CategoryInitial());
 
   Future<void> fetchCategories() async {
     emit(CategoryLoading());
     try {
-      final categories = await repository.fetchCategories();
+      final categories = await categoryRepository.fetchCategories();
       emit(CategoryLoaded(categories: categories));
     } catch (e) {
       emit(CategoryError(message: e.toString()));

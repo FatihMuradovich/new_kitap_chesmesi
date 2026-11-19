@@ -1,4 +1,4 @@
-package com.example.new_kitap_chesmesi
+package com.fatih.kitapchesmesi
 
 import io.flutter.embedding.android.FlutterActivity
 

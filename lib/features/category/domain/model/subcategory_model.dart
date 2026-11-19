@@ -1,37 +1,37 @@
 import 'dart:convert';
 
 class SubcategoryModel {
-  final int id;
+  final int? id;
+  final String image;
   final String name;
-  final int categoryId;
-  final String description;
-
+  final int? parentId;
   SubcategoryModel({
     required this.id,
+    required this.image,
     required this.name,
-    required this.description,
-    required this.categoryId,
+    required this.parentId,
   });
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'description': description,
+      'image': image,
       'name': name,
-      'category': categoryId,
+      'parentId': parentId
     };
   }
 
   factory SubcategoryModel.fromMap(Map<String, dynamic> map) {
     return SubcategoryModel(
-      id: map['id'] as int,
-      description: map['description'] as String,
-      name: map['name'] as String,
-      categoryId: map['category'] as int,
+      id: map['id'],
+      image: map['image'],
+      name: map['name'],
+      parentId: map['parentId'] as int?,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory SubcategoryModel.fromJson(String source) =>
-      SubcategoryModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SubcategoryModel.fromJson(Map<String, dynamic> source) =>
+      SubcategoryModel.fromMap(source);
 }

@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/app.dart';
 import 'package:new_kitap_chesmesi/common/constants/constant_button.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_text_style.dart';
+import 'package:new_kitap_chesmesi/features/home/presentation/cubit/home/home_cubit.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:new_kitap_chesmesi/features/category/presentation/cubit/category_cubit.dart';
 
 class LanguageDialog extends StatelessWidget {
   const LanguageDialog({
@@ -42,10 +45,12 @@ class LanguageDialog extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 5.h),
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  App.of(context)?.setLocale(
-                    const Locale('tm'),
-                  );
+                onPressed: () async {
+                  // NOTE: UI locale for Turkmen should be 'tr' (matches ARB: app_tr.arb)
+                  App.of(context)?.setLocale(const Locale('tr'));
+                  // Refetch language-dependent data
+                  context.read<CategoryCubit>().fetchCategories();
+                  context.read<HomeCubit>().loadHomeData();
                   Navigator.pop(context);
                 },
                 style: ConstantsButtonStyle.elevatedButtonStyleOrange,
@@ -64,6 +69,10 @@ class LanguageDialog extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   App.of(context)?.setLocale(const Locale('ru'));
+                  // Refetch language-dependent data
+                  context.read<CategoryCubit>().fetchCategories();
+                  context.read<HomeCubit>().loadHomeData();
+
                   Navigator.pop(context);
                 },
                 style: ConstantsButtonStyle.elevatedButtonStyleOrange,

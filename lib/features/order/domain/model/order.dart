@@ -13,7 +13,7 @@ class OrderModel extends Equatable {
   // Factory constructor to create an OrderModel from a JSON map.
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
-      book: BookModel.fromJson(json['book'] as Map<String, dynamic>),
+      book: BookModel.fromMap(json['book'] as Map<String, dynamic>),
       quantity: json['quantity'] as int,
     );
   }
@@ -21,7 +21,7 @@ class OrderModel extends Equatable {
   // Converts an OrderModel object to a JSON map.
   Map<String, dynamic> toJson() {
     return {
-      'book': book.toJson(),
+      'book': book,
       'quantity': quantity,
     };
   }

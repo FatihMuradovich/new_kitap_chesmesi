@@ -1,176 +1,200 @@
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_kitap_chesmesi/common/constants/base_url.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
-import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cubit.dart';
-import '../../../../../book/domain/model/book_model.dart';
+import 'package:new_kitap_chesmesi/features/order/domain/model/cart_model.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cart/cart_cubit.dart';
 
-// ignore: must_be_immutable
-class CartItem extends StatefulWidget {
-  BookModel book;
+class CartItem extends StatelessWidget {
+  final CartItemModel cartItem;
 
-  CartItem({super.key, required this.book});
-
-  @override
-  State<CartItem> createState() => _CartItemState();
-}
-
-class _CartItemState extends State<CartItem> {
-  int quantity = 1;
+  const CartItem({super.key, required this.cartItem});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 60.h,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey[50],
-              ),
-              child: AspectRatio(
-                aspectRatio: 1 / 1,
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: widget.book.backgroundImageHard == null
-                      ? AssetImage('assets/images/1.png')
-                      : NetworkImage(widget.book.backgroundImageHard ?? ''),
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: 65.h,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+          margin: const EdgeInsets.all(4),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey[50],
+                ),
+                child: AspectRatio(
+                  aspectRatio: 1 / 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: cartItem.images.isNotEmpty
+                        ? Image.network(
+                            '${BaseUrl.baseUrl}${cartItem.images.first.path}',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Placeholder();
+                            },
+                          )
+                        : const Placeholder(),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.book.name,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontFamily: 'Poppins-black',
-                          fontSize: 14.sp,
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 160.w,
+                          child: Text(
+                            cartItem.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
+                            ),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          context.read<OrderCubit>().removeOrder(widget.book);
-                        },
-                        child: Icon(
-                          Icons.cancel,
-                          color: CustomColors.orangeColor,
-                          size: 16.h,
+                        GestureDetector(
+                          onTap: () {
+                            context
+                                .read<CartCubit>()
+                                .confirmRemoveFromCart(cartItem.id);
+                          },
+                          child: Icon(
+                            Icons.cancel,
+                            color: CustomColors.blueColor,
+                            size: 16.h,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Text(
-                      widget.book.author,
+                      ],
+                    ),
+                    Text(
+                      cartItem.author?.name ?? 'Yazar belirtilmemiş',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontFamily: 'Poppins-regular',
                       ),
                     ),
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          text: widget.book.priceHardcover.toString(),
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF282846),
-                            fontSize: 14.sp,
-                          ),
+                    Spacer(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            TextSpan(
-                              text: ' TMT',
+                            Text(
+                              '${cartItem.discountedPrice.toStringAsFixed(2)} m.',
                               style: TextStyle(
-                                fontFamily: 'Poppins',
+                                fontFamily: 'Poppins-regular',
                                 fontWeight: FontWeight.bold,
                                 color: const Color(0xFF282846),
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<OrderCubit>()
-                                    .decreaseQuantity(widget.book);
-                                quantity--;
-                                setState(() {});
-                              },
-                              child: Icon(
-                                FluentSystemIcons.ic_fluent_remove_filled,
-                                color: CustomColors.blueColor,
-                                size: 14.h,
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Text(
-                              '$quantity',
-                              style: TextStyle(
-                                color: CustomColors.blueColor,
-                                fontFamily: 'Poppins-black',
                                 fontSize: 14.sp,
                               ),
                             ),
-                            SizedBox(width: 8.w),
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<OrderCubit>()
-                                    .increaseQuantity(widget.book);
-                                quantity++;
-                                setState(() {});
-                              },
-                              child: Icon(
-                                FluentSystemIcons.ic_fluent_add_filled,
-                                color: CustomColors.blueColor,
-                                size: 14.h,
-                              ),
+                            SizedBox(
+                              width: 5.w,
                             ),
+                            if (cartItem.discountedPrice < cartItem.priceValue)
+                              Text(
+                                '${cartItem.priceValue.toStringAsFixed(2)} m.',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-regular',
+                                  color: Colors.grey,
+                                  fontSize: 12.sp,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        BlocBuilder<CartCubit, CartState>(
+                          builder: (context, state) {
+                            final canIncrease =
+                                cartItem.quantity < cartItem.stock;
+                            return Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<CartCubit>()
+                                        .decreaseQuantityWithCheck(cartItem);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: CustomColors.orangeColor,
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.2),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: Colors.white,
+                                        size: 12.h,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  '${cartItem.quantity}',
+                                  style: TextStyle(
+                                    color: CustomColors.blueColor,
+                                    fontFamily: 'Poppins-black',
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (!canIncrease) return;
+                                    context
+                                        .read<CartCubit>()
+                                        .increaseQuantityWithStockCheck(
+                                            cartItem);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      // color = CustomColors.orangeColor,
+                                      color: (!canIncrease)
+                                          ? Colors.grey
+                                          : CustomColors.orangeColor,
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.2),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 12.h,
+                                      ),
+                                    ),
+                                    // borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,7 +22,7 @@ class CustomHomeCategory extends StatelessWidget {
           GestureDetector(
             onTap: onTap,
             child: Icon(
-              FluentSystemIcons.ic_fluent_chevron_right_filled,
+              Icons.chevron_right,
               size: 20.sp,
             ),
           ),

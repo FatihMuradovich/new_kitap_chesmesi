@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:new_kitap_chesmesi/localization/l10n/app_localizations.dart';
 
 /// Extension method on [BuildContext] which gives a quick
 /// access to the `AppLocalization` type.

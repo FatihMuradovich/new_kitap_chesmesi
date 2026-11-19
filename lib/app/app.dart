@@ -1,16 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:new_kitap_chesmesi/app/di.dart';
-import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:new_kitap_chesmesi/features/book/presentation/cubit/books_cubit.dart';
+import 'package:new_kitap_chesmesi/app/router/app_router.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/forgot/forgot_cubit.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/register_cubit.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_code/register_code_cubit.dart';
+import 'package:new_kitap_chesmesi/features/book/presentation/cubit/getBookByAuthorId/book_by_author_id_cubit.dart';
+import 'package:new_kitap_chesmesi/features/book/presentation/cubit/getBookById/get_book_by_id_cubit.dart';
+import 'package:new_kitap_chesmesi/features/book/presentation/cubit/comment/comment_cubit.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/category_cubit.dart';
-import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/cubit.dart';
-import 'package:new_kitap_chesmesi/features/home/presentation/cubit/images_cubit.dart';
+import 'package:new_kitap_chesmesi/features/category/presentation/cubit/cubit/subcategory_cubit.dart';
+import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:new_kitap_chesmesi/features/home/presentation/cubit/banner/banner_cubit.dart';
+import 'package:new_kitap_chesmesi/features/home/presentation/cubit/home/home_cubit.dart';
+import 'package:new_kitap_chesmesi/features/home/presentation/cubit/notification/notification_cubit.dart';
 import 'package:new_kitap_chesmesi/features/navBar/cubit/nav_bar_cubit.dart';
-import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cubit.dart';
-import 'package:new_kitap_chesmesi/features/splash/presentation/page/splash_page.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/cart/cart_cubit.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/gift/gift_cubit.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/my_orders/my_orders_cubit.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/order/order_cubit.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cubit/welayat_etrap/cubit/welayatAndEtrap_cubit.dart';
+import 'package:new_kitap_chesmesi/features/profile/presentation/cubit/contact/contact_cubit.dart';
+import 'package:new_kitap_chesmesi/features/profile/presentation/cubit/coupon/coupon_cubit.dart';
+import 'package:new_kitap_chesmesi/features/profile/presentation/cubit/page/page_cubit.dart';
+import 'package:new_kitap_chesmesi/features/profile/presentation/cubit/user/user_cubit.dart';
+import 'package:new_kitap_chesmesi/features/search/presentation/cubit/search_cubit.dart';
+import 'package:new_kitap_chesmesi/core/service/language_service.dart';
+import 'package:new_kitap_chesmesi/localization/l10n/app_localizations.dart';
+import 'package:new_kitap_chesmesi/features/popup/presentation/cubit/popup_cubit.dart';
+
+// Global keys for navigation and scaffold messenger
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -18,18 +42,21 @@ class App extends StatefulWidget {
   @override
   State<App> createState() => _AppState();
 
+  // ignore: library_private_types_in_public_api
   static _AppState? of(BuildContext context) {
     return context.findAncestorStateOfType<_AppState>();
   }
 }
 
 class _AppState extends State<App> {
-  Locale _locale = const Locale('tr');
+  Locale locale = const Locale('tr');
 
-  void setLocale(Locale locale) {
+  void setLocale(Locale newLocal) {
     setState(() {
-      _locale = locale;
+      locale = newLocal;
     });
+
+    di<LanguageService>().setLocale(newLocal);
   }
 
   @override
@@ -37,31 +64,101 @@ class _AppState extends State<App> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => NavBarCubit()),
-        BlocProvider(create: (_) => di<AuthCubit>()),
-        BlocProvider(create: (_) => di<CategoryCubit>()..fetchCategories()),
-        BlocProvider(create: (_) => di<BooksCubit>()..fetchBooks()),
-        BlocProvider(create: (_) => di<ImagesCubit>()..fetchImages()),
-        BlocProvider(create: (_) => di<FavoriteCubit>()..loadFavorites()),
+
+        // Auth cubit
+        BlocProvider(create: (_) => di<RegisterCubit>()),
+        BlocProvider(create: (_) => di<ForgotCubit>()),
+        BlocProvider(create: (_) => di<RegisterCodeCubit>()),
+        BlocProvider(create: (_) => di<LoginCubit>()),
+
+        // User & Profile
+        BlocProvider(create: (_) => di<UserCubit>()),
+        BlocProvider(create: (_) => di<ContactCubit>()),
+        BlocProvider(create: (_) => di<CouponCubit>()),
         BlocProvider(create: (_) => di<OrderCubit>()),
+        BlocProvider(create: (_) => di<MyOrdersCubit>()),
+        BlocProvider(create: (_) => di<GiftCubit>()),
+        BlocProvider(create: (_) => di<FavoriteCubit>()
+            // ..getFavoriteBooks()
+            ),
+
+        // Category
+        BlocProvider(create: (_) => di<CategoryCubit>()..fetchCategories()),
+        BlocProvider(create: (_) => di<SubcategoryCubit>()),
+
+        // BlocProvider(
+        //     create: (_) => di<DiscountedBookCubit>()..fetchDiscountedBooks()),
+        BlocProvider(create: (_) => di<BannerCubit>()..fetchBannerImages()),
+        // Book detail
+        BlocProvider(
+          create: (_) => di<GetBookByIdCubit>(),
+        ),
+        // Latest book
+        // BlocProvider(
+        //   create: (_) => di<LatestBookCubit>()..fetchRecentBooks(),
+        // ),
+        BlocProvider(
+          create: (_) => di<BookByAuthorIdCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di<SearchCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di<CommentCubit>(),
+        ),
+
+        // Popup cubit
+        BlocProvider(
+          create: (_) => di<PopupCubit>(),
+        ),
+
+        // Cart cubit - Global olarak sağlanıyor
+        BlocProvider(
+          create: (_) => di<CartCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di<HomeCubit>()..loadHomeData(),
+        ),
+        BlocProvider(
+          create: (_) => di<PageCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di<WelayatAndEtrapCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => di<NotificationCubit>(),
+        ),
       ],
       child: ScreenUtilInit(
-        builder: (_, child) {
-          return MaterialApp(
+        designSize: const Size(360, 640),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (_, __) {
+          final appRouter = di<AppRouter>();
+          return MaterialApp.router(
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
-            localeResolutionCallback: (locale, supportedLocales) {
-              if (locale == null || !supportedLocales.contains(locale)) {
-                return const Locale('tr');
+            localeResolutionCallback: (deviceLocale, supportedLocales) {
+              if (deviceLocale != null) {
+                for (var supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode ==
+                      deviceLocale.languageCode) {
+                    return supportedLocale;
+                  }
+                }
               }
-              return locale;
+              return const Locale('tr'); // fallback
             },
-            locale: _locale,
-            title: 'Flutter Demo',
+            locale: locale,
+            title: 'Kitap Çeşmesi',
             debugShowCheckedModeBanner: false,
+            scaffoldMessengerKey: scaffoldMessengerKey,
+            routerConfig: appRouter.config(),
             theme: ThemeData(
               cardTheme: CardThemeData(color: Colors.white),
               scaffoldBackgroundColor: Colors.white,
               appBarTheme: AppBarTheme(
+                centerTitle: true,
                 backgroundColor: Colors.white,
                 surfaceTintColor: Colors.white,
                 titleTextStyle: TextStyle(
@@ -74,17 +171,8 @@ class _AppState extends State<App> {
               ),
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             ),
-            home: child,
           );
         },
-        designSize: const Size(360, 640),
-        // designSize: Size(
-        //   MediaQuery.sizeOf(context).width,
-        //   MediaQuery.sizeOf(context).height,
-        // ),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        child: SplashPage(),
       ),
     );
   }
