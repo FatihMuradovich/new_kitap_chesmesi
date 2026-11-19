@@ -42,10 +42,4 @@ class HomeRepositoryImpl extends HomeRepository {
   Future<List<BookModel>> getUserRecommendedBooks() {
     return homeDataSource.getUserRecommendedBooks();
   }
-
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // @override
-  // Future<List<BookModel>> getSpecialOrderableBooks() {
-  //   return homeDataSource.getSpecialOrderableBooks();
-  // }
 }

@@ -23,9 +23,6 @@ class BookModel {
   final String? discount;
   final String status;
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// Kitap özel siparişe (yurtdışından getirtmeye) açık mı (§2).
-  // final bool specialOrderable;
   final int stock;
   final String? cover;
   final int? pageCount;
@@ -55,7 +52,6 @@ class BookModel {
     required this.createdAt,
     required this.stock,
     required this.images,
-    // this.specialOrderable = false,
     this.desc,
     this.productCode,
     this.authorId,
@@ -99,10 +95,6 @@ class BookModel {
   /// `Available` | `Upcoming` | `Finished`.
   bool get isFinished => status.toLowerCase() == 'finished';
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// "Özel sipariş ver" butonu / rozeti yalnızca bu doğruysa çizilir.
-  // bool get isSpecialOrderable => isFinished && specialOrderable;
-
   double get discountedPrice {
     if (discountType?.toLowerCase() == 'percent') {
       return priceValue - (priceValue * discountValue / 100);
@@ -120,7 +112,6 @@ class BookModel {
     String? discountType,
     String? discount,
     String? status,
-    // bool? specialOrderable,
     DateTime? createdAt,
     int? stock,
     List<ImageModel>? images,
@@ -150,7 +141,6 @@ class BookModel {
       discountType: discountType ?? this.discountType,
       discount: discount ?? this.discount,
       status: status ?? this.status,
-      // specialOrderable: specialOrderable ?? this.specialOrderable,
       createdAt: createdAt ?? this.createdAt,
       stock: stock ?? this.stock,
       images: images ?? this.images,
@@ -187,7 +177,6 @@ class BookModel {
       discountType: map['discountType'] as String?,
       discount: map['discount'] as String?,
       status: map['status'] as String,
-      // specialOrderable: map['specialOrderable'] as bool? ?? false,
       stock: map['stock'] as int,
       cover: map['cover'] as String?,
       pageCount: map['pageCount'] as int?,

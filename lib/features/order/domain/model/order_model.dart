@@ -74,72 +74,6 @@ enum OrderStatus {
   }
 }
 
-// ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-// /// Özel siparişin tedarik ekseni (SPECIAL-ORDER-API.md §3).
-// ///
-// /// `Order.status` ile **paralel** ilerler, onun yerine geçmez:
-// /// ```
-// /// status:        Confirmed ─────────────────▶ Shipped ─▶ Delivered
-// /// supplyStatus:  Preparing ─▶ OrderedAbroad ─▶ InTransit ─▶ Arrived
-// /// ```
-// /// Yalnızca ileri gider, geri alınamaz. API PascalCase döner (`OrderedAbroad`).
-// enum SupplyStatus {
-//   preparing,
-//   orderedAbroad,
-//   inTransit,
-//   arrived,
-//   unknown;
-//
-//   static SupplyStatus fromApi(String? raw) {
-//     switch (raw?.trim().toLowerCase()) {
-//       case 'preparing':
-//         return SupplyStatus.preparing;
-//       case 'orderedabroad':
-//         return SupplyStatus.orderedAbroad;
-//       case 'intransit':
-//         return SupplyStatus.inTransit;
-//       case 'arrived':
-//         return SupplyStatus.arrived;
-//       default:
-//         return SupplyStatus.unknown;
-//     }
-//   }
-//
-//   String get apiValue {
-//     switch (this) {
-//       case SupplyStatus.preparing:
-//         return 'Preparing';
-//       case SupplyStatus.orderedAbroad:
-//         return 'OrderedAbroad';
-//       case SupplyStatus.inTransit:
-//         return 'InTransit';
-//       case SupplyStatus.arrived:
-//         return 'Arrived';
-//       case SupplyStatus.unknown:
-//         return '';
-//     }
-//   }
-//
-//   /// Özel siparişte iptal **yalnızca** `Preparing` iken açıktır (§3).
-//   bool get isCancellable => this == SupplyStatus.preparing;
-//
-//   /// Tedarik çizelgesi adımı: Preparing → OrderedAbroad → InTransit → Arrived.
-//   int get stepIndex {
-//     switch (this) {
-//       case SupplyStatus.preparing:
-//         return 0;
-//       case SupplyStatus.orderedAbroad:
-//         return 1;
-//       case SupplyStatus.inTransit:
-//         return 2;
-//       case SupplyStatus.arrived:
-//         return 3;
-//       case SupplyStatus.unknown:
-//         return 0;
-//     }
-//   }
-// }
-
 class OrderItem {
   final int bookId;
   final int quantity;
@@ -273,13 +207,6 @@ class OrderData {
   final UserData? user;
   final GiftData? gift;
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı (SPECIAL-ORDER-API.md §5).
-  // final bool isSpecialOrder;
-  // final SupplyStatus? supplyStatus;
-  // final String? estimatedArrival;
-  // final DeliveryMethodModel? deliveryMethod;
-  // final int? specialRequestId;
-
   OrderData({
     required this.id,
     this.userId,
@@ -296,18 +223,9 @@ class OrderData {
     this.statusHistory = const [],
     this.user,
     this.gift,
-    // this.isSpecialOrder = false,
-    // this.supplyStatus,
-    // this.estimatedArrival,
-    // this.deliveryMethod,
-    // this.specialRequestId,
   });
 
   /// İptal butonunun tek kaynağı.
-  ///
-  /// ÖZEL SİPARİŞ kapalı: kural yalnızca `status`'a bakıyor
-  /// (`Pending` / `Confirmed`). Açılınca `isSpecialOrder` ise
-  /// `supplyStatus?.isCancellable` kullanılmalı (SPECIAL-ORDER-API.md §3).
   bool get canCancel => status.isCancellable;
 
   /// `total` Prisma `Decimal` olduğu için JSON'da string gelir (ORDER-API.md §5.5).
@@ -346,7 +264,6 @@ class OrderData {
       gift: map['gift'] != null
           ? GiftData.fromMap(map['gift'] as Map<String, dynamic>)
           : null,
-      // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
     );
   }
 }

@@ -93,33 +93,6 @@ class BookItem extends StatelessWidget {
                       },
                     ),
                   ),
-                  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-                  // // Stokta yok ama getirtilebilir — kullanıcı listede ayırt
-                  // // edebilsin (SPECIAL-ORDER-API.md §7).
-                  // if (book.isSpecialOrderable)
-                  // Positioned(
-                  // left: 4,
-                  // bottom: 4,
-                  // child: Container(
-                  // padding: EdgeInsets.symmetric(
-                  // horizontal: 6.w,
-                  // vertical: 2.h,
-                  // ),
-                  // decoration: BoxDecoration(
-                  // color: CustomColors.orangeColor,
-                  // borderRadius: BorderRadius.circular(999),
-                  // ),
-                  // child: Text(
-                  // context.l10n.specialOrderBadge,
-                  // style: TextStyle(
-                  // color: Colors.white,
-                  // fontFamily: 'Poppins-regular',
-                  // fontSize: 9.sp,
-                  // fontWeight: FontWeight.w600,
-                  // ),
-                  // ),
-                  // ),
-                  // ),
                 ],
               ),
               SizedBox(height: 5.h),

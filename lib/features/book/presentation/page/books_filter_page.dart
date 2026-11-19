@@ -269,32 +269,6 @@ class _BooksFilterPageState extends State<BooksFilterPage> {
               subtitle: _publisherSubtitle(),
               onTap: _openPublisherFilter,
             ),
-            // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-            // // Kapsam anahtarı — açıkken liste getirtilebilir kitaplara daralır.
-            // SwitchListTile.adaptive(
-            // value: _filters.specialOrderable,
-            // activeTrackColor: CustomColors.orangeColor,
-            // contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-            // title: Text(
-            // context.l10n.specialOrderBadge,
-            // style: TextStyle(
-            // fontFamily: 'Poppins-regular',
-            // fontSize: 14.sp,
-            // color: Colors.black,
-            // ),
-            // ),
-            // subtitle: Text(
-            // context.l10n.emptyRequestsHint,
-            // style: TextStyle(
-            // fontFamily: 'Poppins-regular',
-            // fontSize: 11.sp,
-            // color: Colors.grey[600],
-            // ),
-            // ),
-            // onChanged: (value) => setState(
-            // () => _filters = _filters.copyWith(specialOrderable: value),
-            // ),
-            // ),
           ],
         ),
       ),

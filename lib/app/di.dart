@@ -99,17 +99,6 @@ import 'package:new_kitap_chesmesi/features/order/presentation/cubit/my_orders/m
 import 'package:new_kitap_chesmesi/features/order/presentation/cubit/order/order_cubit.dart';
 import 'package:new_kitap_chesmesi/features/order/presentation/cubit/order_detail/order_detail_cubit.dart';
 import 'package:new_kitap_chesmesi/features/order/presentation/cubit/welayat_etrap/cubit/welayatAndEtrap_cubit.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/data/data_source/delivery_method_data_source.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/data/data_source/special_order_data_source.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/data/repository/delivery_method_repository_impl.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/data/repository/special_order_repository_impl.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/domain/repository/delivery_method_repository.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/domain/repository/special_order_repository.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/presentation/cubit/approve_special_order/approve_special_order_cubit.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/presentation/cubit/create_special_order/create_special_order_cubit.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/presentation/cubit/delivery_method/delivery_method_cubit.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/presentation/cubit/special_order_detail/special_order_detail_cubit.dart';
-// import 'package:new_kitap_chesmesi/features/special_order/presentation/cubit/special_orders/special_orders_cubit.dart';
 import 'package:new_kitap_chesmesi/features/profile/data/data_source/contact_data_source.dart';
 import 'package:new_kitap_chesmesi/features/profile/data/data_source/coupon_data_source.dart';
 import 'package:new_kitap_chesmesi/features/profile/data/data_source/page_data_source.dart';
@@ -269,13 +258,6 @@ registerDataSource() {
   di.registerLazySingleton(
     () => OrderDataSource(dioClient: di<DioClient>()),
   );
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // di.registerLazySingleton(
-  // () => SpecialOrderDataSource(dioClient: di<DioClient>()),
-  // );
-  // di.registerLazySingleton(
-  // () => DeliveryMethodDataSource(dioClient: di<DioClient>()),
-  // );
   di.registerLazySingleton<CommentDataSource>(
     () => CommentDataSourceImpl(dioSetting: di<DioClient>()),
   );
@@ -382,17 +364,6 @@ registerRepository() {
   di.registerLazySingleton<OrderRepository>(
     () => OrderRepositoryImpl(orderDataSource: di<OrderDataSource>()),
   );
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // di.registerLazySingleton<SpecialOrderRepository>(
-  // () => SpecialOrderRepositoryImpl(
-  // specialOrderDataSource: di<SpecialOrderDataSource>(),
-  // ),
-  // );
-  // di.registerLazySingleton<DeliveryMethodRepository>(
-  // () => DeliveryMethodRepositoryImpl(
-  // deliveryMethodDataSource: di<DeliveryMethodDataSource>(),
-  // ),
-  // );
   di.registerLazySingleton<CommentRepository>(
     () => CommentRepositoryImpl(commentDataSource: di<CommentDataSource>()),
   );
@@ -470,18 +441,6 @@ registerCubit() {
       () => MyOrdersCubit(orderRepository: di<OrderRepository>()));
   di.registerFactory(
       () => OrderDetailCubit(orderRepository: di<OrderRepository>()));
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // di.registerFactory(() => SpecialOrdersCubit(
-  // specialOrderRepository: di<SpecialOrderRepository>()));
-  // di.registerFactory(() => SpecialOrderDetailCubit(
-  // specialOrderRepository: di<SpecialOrderRepository>()));
-  // di.registerFactory(() => CreateSpecialOrderCubit(
-  // specialOrderRepository: di<SpecialOrderRepository>()));
-  // di.registerFactory(() => ApproveSpecialOrderCubit(
-  // specialOrderRepository: di<SpecialOrderRepository>()));
-  // // Usul listesi nadiren değişir ve birden çok ekranda gerekiyor — tekil.
-  // di.registerLazySingleton(() => DeliveryMethodCubit(
-  // deliveryMethodRepository: di<DeliveryMethodRepository>()));
   di.registerFactory(
       () => CommentCubit(commentRepository: di<CommentRepository>()));
   di.registerFactory(() => HomeCubit(homeRepository: di<HomeRepository>()));

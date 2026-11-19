@@ -9,6 +9,4 @@ abstract class HomeRepository {
   Future<List<BookModel>> fetchBooksByLang(int languageId);
   Future<List<BookModel>> getBookByCategoryId(int categoryId);
   Future<List<BookModel>> getUserRecommendedBooks();
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // Future<List<BookModel>> getSpecialOrderableBooks();
 }

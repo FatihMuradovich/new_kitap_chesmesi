@@ -34,9 +34,5 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: AddCommentRoute.page),
         AutoRoute(page: AllCommentsRoute.page),
         AutoRoute(page: OnboardingCategoryRoute.page),
-        // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-        // AutoRoute(page: SpecialOrdersRoute.page),
-        // AutoRoute(page: SpecialOrderDetailRoute.page),
-        // AutoRoute(page: SpecialOrderApproveRoute.page),
       ];
 }

@@ -287,15 +287,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: 'assets/icons/rule_light.png',
                   title: context.l10n.myOrders,
                 ),
-              // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-              // if (!_isGuest)
-              //   ProfileItem(
-              //     ontap: () {
-              //       di<AppRouter>().push(const SpecialOrdersRoute());
-              //     },
-              //     icon: 'assets/icons/rule_light.png',
-              //     title: context.l10n.myRequests,
-              //   ),
               if (!_isGuest)
                 ProfileItem(
                   ontap: () {

@@ -67,16 +67,6 @@ import 'package:new_kitap_chesmesi/features/profile/presentation/page/user_edit_
     as _i28;
 import 'package:new_kitap_chesmesi/features/search/presentation/page/search_page.dart'
     as _i21;
-import 'package:new_kitap_chesmesi/features/special_order/domain/model/delivery_method_model.dart'
-    as _i34;
-import 'package:new_kitap_chesmesi/features/special_order/domain/model/special_order_model.dart'
-    as _i35;
-import 'package:new_kitap_chesmesi/features/special_order/presentation/page/special_order_approve_page.dart'
-    as _i22;
-import 'package:new_kitap_chesmesi/features/special_order/presentation/page/special_order_detail_page.dart'
-    as _i23;
-import 'package:new_kitap_chesmesi/features/special_order/presentation/page/special_orders_page.dart'
-    as _i24;
 import 'package:new_kitap_chesmesi/features/splash/presentation/page/splash_page.dart'
     as _i25;
 
@@ -727,122 +717,6 @@ class SearchRoute extends _i30.PageRouteInfo<void> {
     name,
     builder: (data) {
       return const _i21.SearchPage();
-    },
-  );
-}
-
-/// generated route for
-/// [_i22.SpecialOrderApprovePage]
-class SpecialOrderApproveRoute
-    extends _i30.PageRouteInfo<SpecialOrderApproveRouteArgs> {
-  SpecialOrderApproveRoute({
-    _i31.Key? key,
-    required int requestId,
-    required _i34.DeliveryMethodModel method,
-    required List<_i35.SpecialOrderItemData> items,
-    List<_i30.PageRouteInfo>? children,
-  }) : super(
-         SpecialOrderApproveRoute.name,
-         args: SpecialOrderApproveRouteArgs(
-           key: key,
-           requestId: requestId,
-           method: method,
-           items: items,
-         ),
-         initialChildren: children,
-       );
-
-  static const String name = 'SpecialOrderApproveRoute';
-
-  static _i30.PageInfo page = _i30.PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<SpecialOrderApproveRouteArgs>();
-      return _i22.SpecialOrderApprovePage(
-        key: args.key,
-        requestId: args.requestId,
-        method: args.method,
-        items: args.items,
-      );
-    },
-  );
-}
-
-class SpecialOrderApproveRouteArgs {
-  const SpecialOrderApproveRouteArgs({
-    this.key,
-    required this.requestId,
-    required this.method,
-    required this.items,
-  });
-
-  final _i31.Key? key;
-
-  final int requestId;
-
-  final _i34.DeliveryMethodModel method;
-
-  final List<_i35.SpecialOrderItemData> items;
-
-  @override
-  String toString() {
-    return 'SpecialOrderApproveRouteArgs{key: $key, requestId: $requestId, method: $method, items: $items}';
-  }
-}
-
-/// generated route for
-/// [_i23.SpecialOrderDetailPage]
-class SpecialOrderDetailRoute
-    extends _i30.PageRouteInfo<SpecialOrderDetailRouteArgs> {
-  SpecialOrderDetailRoute({
-    _i31.Key? key,
-    required int requestId,
-    List<_i30.PageRouteInfo>? children,
-  }) : super(
-         SpecialOrderDetailRoute.name,
-         args: SpecialOrderDetailRouteArgs(key: key, requestId: requestId),
-         initialChildren: children,
-       );
-
-  static const String name = 'SpecialOrderDetailRoute';
-
-  static _i30.PageInfo page = _i30.PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<SpecialOrderDetailRouteArgs>();
-      return _i23.SpecialOrderDetailPage(
-        key: args.key,
-        requestId: args.requestId,
-      );
-    },
-  );
-}
-
-class SpecialOrderDetailRouteArgs {
-  const SpecialOrderDetailRouteArgs({this.key, required this.requestId});
-
-  final _i31.Key? key;
-
-  final int requestId;
-
-  @override
-  String toString() {
-    return 'SpecialOrderDetailRouteArgs{key: $key, requestId: $requestId}';
-  }
-}
-
-/// generated route for
-/// [_i24.SpecialOrdersPage]
-class SpecialOrdersRoute extends _i30.PageRouteInfo<void> {
-  const SpecialOrdersRoute({List<_i30.PageRouteInfo>? children})
-    : super(SpecialOrdersRoute.name, initialChildren: children);
-
-  static const String name = 'SpecialOrdersRoute';
-
-  static _i30.PageInfo page = _i30.PageInfo(
-    name,
-    builder: (data) {
-      return const _i24.SpecialOrdersPage();
     },
   );
 }

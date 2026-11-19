@@ -9,10 +9,6 @@ class BooksFilterCriteria extends Equatable {
   final List<int> authorIds;
   final List<int> publisherIds;
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// "Getirdip bolýar" — açıkken liste getirtilebilir kitaplara daralır.
-  // final bool specialOrderable;
-
   const BooksFilterCriteria({
     this.sortOption,
     this.minPrice,
@@ -20,7 +16,6 @@ class BooksFilterCriteria extends Equatable {
     this.languageIds = const [],
     this.authorIds = const [],
     this.publisherIds = const [],
-    // this.specialOrderable = false,
   });
 
   bool get isEmpty =>

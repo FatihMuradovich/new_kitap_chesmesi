@@ -43,7 +43,6 @@ class OrderDataSource {
           'limit': limit,
           if (status != null && status != OrderStatus.unknown)
             'status': status.apiValue,
-          // ÖZEL SİPARİŞ — geçici olarak kapatıldı (§5 `isSpecialOrder` filtresi).
         },
       );
       return OrdersPage.fromMap(response.data as Map<String, dynamic>);

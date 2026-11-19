@@ -7,7 +7,4 @@ enum BookCategoryType {
   literature,
   allBooks,
   recommended,
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// "Getirtebiliriz" — `status=Finished` + `specialOrderable=true`.
-  // specialOrderable,
 }

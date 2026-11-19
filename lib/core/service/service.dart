@@ -332,14 +332,11 @@ class FirebaseNotificatioService {
     handleNotificationPayload(message.data);
   }
 
-  /// Bildirim payload'ına göre derin bağlantı (ORDER-API.md §6,
-  /// SPECIAL-ORDER-API.md §6):
+  /// Bildirim payload'ına göre derin bağlantı (ORDER-API.md §6):
   ///
   /// | `type`                 | ek alanlar              | hedef          |
   /// |------------------------|-------------------------|----------------|
   /// | `order_status`         | `orderId`, `status`     | sipariş detayı |
-  /// | `special_order_supply` | `orderId`, `supplyStatus` | sipariş detayı |
-  /// | `special_order`        | `requestId`, `status`   | talep detayı   |
   void handleNotificationPayload(Map<String, dynamic> data) {
     final link = _deepLinkFrom(data);
     if (link == null) return;
@@ -360,9 +357,6 @@ class FirebaseNotificatioService {
     final type = data['type']?.toString();
     switch (type) {
       case 'order_status':
-      // ÖZEL SİPARİŞ — geçici olarak kapatıldı:
-      // case 'special_order_supply': → sipariş detayı (orderId)
-      // case 'special_order':        → talep detayı (requestId)
         final orderId = int.tryParse(data['orderId']?.toString() ?? '');
         return orderId == null
             ? null
@@ -421,7 +415,6 @@ class FirebaseNotificatioService {
   }
 }
 
-// ÖZEL SİPARİŞ kapalı: açılınca `specialOrderRequest` hedefi geri eklenmeli.
 enum _DeepLinkTarget { order }
 
 /// Router mount olmadan gelen bildirim tıklaması burada bekletilir.

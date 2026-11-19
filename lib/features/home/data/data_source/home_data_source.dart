@@ -108,32 +108,6 @@ class HomeDataSource {
     }
   }
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// "Getirtebiliriz" bölümü — stokta olmayan ama yurtdışından getirtilebilecek
-  // /// kitaplar (SPECIAL-ORDER-API.md §2, §7). Sunucu filtreliyor; bu listeye
-  // /// `HomeCubit`'teki `available` elemesi UYGULANMAZ, yoksa liste hep boş kalır.
-  // Future<List<BookModel>> getSpecialOrderableBooks({int limit = 10}) async {
-  //   try {
-  //     final response = await dioSetting.dio.get(
-  //       '/book',
-  //       queryParameters: {
-  //         'status': 'Finished',
-  //         'specialOrderable': true,
-  //         'limit': limit,
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final List data = response.data['data'];
-  //       return data.map((json) => BookModel.fromMap(json)).toList();
-  //     } else {
-  //       throw Exception('Getirtilebilir kitapları getirme başarısız');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('API hatası: $e');
-  //   }
-  // }
-
   /// Kullanıcıya özel önerilen kitaplar
   Future<List<BookModel>> getUserRecommendedBooks() async {
     try {

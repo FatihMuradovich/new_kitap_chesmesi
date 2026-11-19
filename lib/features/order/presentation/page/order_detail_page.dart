@@ -145,21 +145,12 @@ class _OrderDetailView extends StatelessWidget {
                     SizedBox(height: 8.h),
                   ],
                   _DeliveryCard(order: order),
-                  // ÖZEL SİPARİŞ — geçici olarak kapatıldı (tedarik ekseni, §3).
-                  // if (order.isSpecialOrder && order.supplyStatus != null) ...[
-                  //   SizedBox(height: 16.h),
-                  //   _SectionTitle(title: context.l10n.supplyStatusTitle),
-                  //   SizedBox(height: 8.h),
-                  //   _SupplyCard(order: order),
-                  // ],
                   if (order.statusHistory.isNotEmpty) ...[
                     SizedBox(height: 16.h),
                     _SectionTitle(title: context.l10n.orderStatusHistoryTitle),
                     SizedBox(height: 8.h),
                     _StatusTimeline(history: order.statusHistory),
                   ],
-                  // Özel siparişte kural `supplyStatus`'e bağlı — karar
-                  // `OrderData.canCancel` içinde (SPECIAL-ORDER-API.md §3).
                   if (order.canCancel) ...[
                     SizedBox(height: 24.h),
                     SizedBox(
@@ -431,7 +422,6 @@ class _SummaryCard extends StatelessWidget {
               color: Colors.grey[500],
             ),
           ),
-          // ÖZEL SİPARİŞ — geçici olarak kapatıldı ("Ýörite sargyt" rozeti).
           SizedBox(height: 18.h),
           if (order.status == OrderStatus.cancelled)
             const OrderCancelledBanner()
@@ -664,84 +654,6 @@ class _DeliveryCard extends StatelessWidget {
 }
 
 /// Durum geçmişi zaman çizelgesi — kayıtlar API'den tarihe göre artan gelir.
-// ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-// /// Özel siparişin tedarik ekseni: usul, tahmini varış ve 4 adımlı çizelge.
-// /// `status` ekseninden bağımsızdır (SPECIAL-ORDER-API.md §3).
-// class _SupplyCard extends StatelessWidget {
-//   const _SupplyCard({required this.order});
-//
-//   final OrderData order;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final method = order.deliveryMethod;
-//     return _CardShell(
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           if (method != null) ...[
-//             Row(
-//               children: [
-//                 Icon(Icons.local_shipping_outlined,
-//                     size: 16.sp, color: Colors.grey[500]),
-//                 SizedBox(width: 8.w),
-//                 Expanded(
-//                   child: Text(
-//                     method.name,
-//                     style: TextStyle(
-//                       fontFamily: 'Poppins-regular',
-//                       fontSize: 13.sp,
-//                       fontWeight: FontWeight.w600,
-//                     ),
-//                   ),
-//                 ),
-//                 Text(
-//                   context.l10n
-//                       .deliveryMethodDays(method.minDays, method.maxDays),
-//                   style: TextStyle(
-//                     fontFamily: 'Poppins-regular',
-//                     fontSize: 12.sp,
-//                     color: Colors.grey[600],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 10.h),
-//           ],
-//           if (order.estimatedArrival != null) ...[
-//             Row(
-//               children: [
-//                 Icon(Icons.event_outlined,
-//                     size: 16.sp, color: Colors.grey[500]),
-//                 SizedBox(width: 8.w),
-//                 Text(
-//                   context.l10n.estimatedArrival,
-//                   style: TextStyle(
-//                     fontFamily: 'Poppins-regular',
-//                     fontSize: 12.sp,
-//                     color: Colors.grey[600],
-//                   ),
-//                 ),
-//                 const Spacer(),
-//                 Text(
-//                   formatOrderDate(order.estimatedArrival!),
-//                   style: TextStyle(
-//                     fontFamily: 'Poppins-regular',
-//                     fontSize: 13.sp,
-//                     fontWeight: FontWeight.w600,
-//                     color: CustomColors.orangeColor,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 14.h),
-//           ],
-//           SupplyStepper(status: order.supplyStatus!),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class _StatusTimeline extends StatelessWidget {
   const _StatusTimeline({required this.history});
@@ -757,8 +669,6 @@ class _StatusTimeline extends StatelessWidget {
           final entry = history[index];
           final isLast = index == history.length - 1;
           final color = orderStatusColor(entry.status);
-          // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-          // final supplyNote = parseSupplyNote(entry.note);
 
           return IntrinsicHeight(
             child: Row(
@@ -826,9 +736,6 @@ class _StatusTimeline extends StatelessWidget {
                             color: Colors.grey[600],
                           ),
                         ),
-                        // ÖZEL SİPARİŞ — geçici olarak kapatıldı: `note`
-                        // içindeki tedarik öneki ("Arrived: …", §5) rozete
-                        // dönüştürülmüyor, düz metin olarak gösteriliyor.
                         if (entry.note != null &&
                             entry.note!.isNotEmpty) ...[
                           SizedBox(height: 4.h),

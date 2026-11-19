@@ -103,8 +103,6 @@ class _BooksPageState extends State<BooksPage> {
   bool _usesPagination() {
     if (widget.categoryType == BookCategoryType.allBooks) return true;
     if (widget.categoryType == BookCategoryType.discounted) return true;
-    // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-    // if (widget.categoryType == BookCategoryType.specialOrderable) return true;
     return false;
   }
 
@@ -116,9 +114,6 @@ class _BooksPageState extends State<BooksPage> {
         return _booksCubit.loadMoreAllBooks();
       case BookCategoryType.discounted:
         return _booksCubit.loadMoreDiscountedBooks();
-      // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-      // case BookCategoryType.specialOrderable:
-      //   return _booksCubit.loadMoreSpecialOrderableBooks();
       default:
         return null;
     }
@@ -159,10 +154,6 @@ class _BooksPageState extends State<BooksPage> {
       case BookCategoryType.recommended:
         _booksCubit.fetchUserRecommendedBooks();
         break;
-      // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-      // case BookCategoryType.specialOrderable:
-      //   _booksCubit.fetchSpecialOrderableBooks();
-      //   break;
     }
   }
 

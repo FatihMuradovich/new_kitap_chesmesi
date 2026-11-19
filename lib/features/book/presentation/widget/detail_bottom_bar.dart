@@ -106,8 +106,6 @@ class DetailBottomBar extends StatelessWidget {
                 ),
                 SizedBox(width: 10.w),
               ],
-              // ÖZEL SİPARİŞ — geçici olarak kapatıldı. Açılınca burada
-              // `book.isSpecialOrderable` ise `_SpecialOrderButton` çizilir.
               Expanded(
                 child: BlocBuilder<CartCubit, CartState>(
                   builder: (context, state) {
@@ -190,40 +188,3 @@ class DetailBottomBar extends StatelessWidget {
     );
   }
 }
-
-// ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-// /// "Ýörite sargyt" butonu — stokta olmayan, getirtilebilir kitaplar için.
-// /// Talep sheet'i açar; sepetle ilgisi yoktur.
-// class _SpecialOrderButton extends StatelessWidget {
-//   const _SpecialOrderButton({required this.book});
-//
-//   final BookModel book;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return CustomButton(
-//       backgroundColor: CustomColors.orangeColor,
-//       onTap: () async {
-//         final ok = await ensureLoggedIn(context);
-//         if (!ok || !context.mounted) return;
-//
-//         final created = await showSpecialOrderSheet(context, book);
-//         if (created == true && context.mounted) {
-//           NotificationHelper.showSuccess(
-//             context,
-//             context.l10n.specialOrderRequestSent,
-//           );
-//         }
-//       },
-//       child: Text(
-//         context.l10n.createSpecialOrder,
-//         style: TextStyle(
-//           fontFamily: 'Poppins-regular',
-//           fontWeight: FontWeight.bold,
-//           fontSize: 14.sp,
-//           color: Colors.white,
-//         ),
-//       ),
-//     );
-//   }
-// }

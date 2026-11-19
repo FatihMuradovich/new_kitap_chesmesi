@@ -94,21 +94,6 @@ class _HomePageState extends State<HomePage>
                             ),
                           )
                         : SizedBox.shrink(),
-                    // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-                    // "Getirtebiliriz" bölümü (SPECIAL-ORDER-API.md §7).
-                    // state.specialOrderableBooks.isNotEmpty
-                    //     ? _buildBookSection(
-                    //         title: context.l10n.specialOrderSectionTitle,
-                    //         books: state.specialOrderableBooks,
-                    //         onTap: () => di<AppRouter>().push(
-                    //           BooksRoute(
-                    //             categoryType:
-                    //                 BookCategoryType.specialOrderable,
-                    //             name: context.l10n.specialOrderSectionTitle,
-                    //           ),
-                    //         ),
-                    //       )
-                    //     : SizedBox.shrink(),
                     state.discountBooks.isNotEmpty
                         ? _buildBookSection(
                             title: context.l10n.discountBook,

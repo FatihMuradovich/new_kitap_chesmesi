@@ -15,9 +15,6 @@ class SearchCubit extends Cubit<SearchState> {
   bool _isLoadingMore = false;
 
   /// Aramada yalnızca stoktaki kitaplar gösterilir.
-  ///
-  /// ÖZEL SİPARİŞ — geçici olarak kapatıldı. Açılınca koşula
-  /// `|| book.isSpecialOrderable` eklenmeli.
   List<BookModel> _visibleBooks(List<BookModel> books) => books
       .where((book) => book.status.toLowerCase() == 'available')
       .toList();

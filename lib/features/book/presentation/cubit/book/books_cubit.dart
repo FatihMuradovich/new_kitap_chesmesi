@@ -177,8 +177,6 @@ class BooksCubit extends Cubit<BookState> {
 
   static const int _allBooksPageSize = 10;
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // static const int _specialOrderablePageSize = 20;
   static const int _maxInitialPages = 50;
   static const int _sortedFetchLimit = 50;
   static const int _maxSortedScanPages = 20;
@@ -188,17 +186,6 @@ class BooksCubit extends Cubit<BookState> {
         .where((book) => book.status.toLowerCase() == 'available')
         .toList();
   }
-
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// Bir kapsamdan gelen listeye uygulanan son eleme. "Getirdip bolýar"
-  // /// filtresi açıkken kapsam aynı kalır, yalnızca getirtilebilir kitaplar kalır.
-  // List<BookModel> _scopeFilter(
-  //   List<BookModel> books, {
-  //   required bool specialOrderableOnly,
-  // }) {
-  //   if (!specialOrderableOnly) return _availableOnly(books);
-  //   return books.where((book) => book.isSpecialOrderable).toList();
-  // }
 
   Future<({List<BookModel> books, int lastPage, bool hasMore})>
       _fetchAvailableSortedBatch({
@@ -447,31 +434,9 @@ class BooksCubit extends Cubit<BookState> {
             limit: _allBooksPageSize,
           ),
         );
-      // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-      // case BookCategoryType.specialOrderable:
-      //   return _fetchAllSpecialOrderableBooks();
     }
   }
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// Getirtilebilir kitapların tamamı, sayfa sayfa.
-  // /// `_fetchAllDiscountedBooks` ile aynı desen; `_availableOnly` UYGULANMAZ —
-  // /// bu liste tanımı gereği `Finished` (SPECIAL-ORDER-API.md §2).
-  // Future<List<BookModel>> _fetchAllSpecialOrderableBooks() async {
-  // final all = <BookModel>[];
-  // int page = 1;
-  //
-  // while (page <= _maxInitialPages) {
-  // final books = await _fetchSpecialOrderablePage(page);
-  // if (books.isEmpty) break;
-  // all.addAll(books);
-  // if (books.length < _specialOrderablePageSize) break;
-  // page++;
-  // }
-  //
-  // return all;
-  // }
-  //
   Future<List<BookModel>> _fetchAllDiscountedBooks() async {
     final allDiscounted = <BookModel>[];
     int page = 1;
@@ -734,61 +699,4 @@ class BooksCubit extends Cubit<BookState> {
       emit(BookError(message: e.toString()));
     }
   }
-
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// "Getirtebiliriz" listesi — SPECIAL-ORDER-API.md §2.
-  // /// Sunucu filtreliyor; burada `available` elemesi YAPILMAZ.
-  // Future<void> fetchSpecialOrderableBooks() async {
-  // emit(BooksLoading());
-  // try {
-  // final books = await _fetchSpecialOrderablePage(1);
-  // emit(BooksLoaded(
-  // books: books,
-  // // Dolu sayfa geldiyse devamı olabilir.
-  // hasMore: books.length >= _specialOrderablePageSize,
-  // currentPage: 1,
-  // listContext: const BookListContext(
-  // categoryType: BookCategoryType.specialOrderable,
-  // ),
-  // ));
-  // } catch (e) {
-  // emit(BookError(message: e.toString()));
-  // }
-  // }
-  //
-  // /// Sonsuz kaydırma — `loadMoreAllBooks` ile aynı sözleşme: hata durumunda
-  // /// önceki state'e dönülür, boş sayfa geldiğinde döngü durur.
-  // Future<void> loadMoreSpecialOrderableBooks() async {
-  // final currentState = state;
-  // if (currentState is! BooksLoaded) return;
-  // if (!currentState.hasMore) return;
-  // if (currentState.listContext?.categoryType !=
-  // BookCategoryType.specialOrderable) {
-  // return;
-  // }
-  //
-  // emit(BooksLoadingMore(currentBooks: currentState.books));
-  //
-  // final nextPage = currentState.currentPage + 1;
-  // try {
-  // final newBooks = await _fetchSpecialOrderablePage(nextPage);
-  // emit(BooksLoaded(
-  // books: [...currentState.books, ...newBooks],
-  // hasMore: newBooks.length >= _specialOrderablePageSize,
-  // currentPage: nextPage,
-  // listContext: currentState.listContext,
-  // ));
-  // } catch (_) {
-  // emit(currentState);
-  // }
-  // }
-  //
-  // Future<List<BookModel>> _fetchSpecialOrderablePage(int page) {
-  // return allBooksRepository.getAllBooks(
-  // page: page,
-  // limit: _specialOrderablePageSize,
-  // status: 'Finished',
-  // specialOrderable: true,
-  // );
-  // }
 }

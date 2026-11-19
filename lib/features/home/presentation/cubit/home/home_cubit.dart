@@ -29,9 +29,6 @@ class HomeCubit extends Cubit<HomeState> {
         safeLoadList(() => homeRepository.getBookByCategoryId(6));
     final fBookByCategoryIdLiterature =
         safeLoadList(() => homeRepository.getBookByCategoryId(1));
-    // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-    // final fSpecialOrderableBooks =
-    //     safeLoadList(() => homeRepository.getSpecialOrderableBooks());
 
     final banners = (await fBanners).valueOrEmpty;
     final userBooks = (await fUserBooks).valueOrEmpty;
@@ -41,9 +38,6 @@ class HomeCubit extends Cubit<HomeState> {
     final bookByCategoryId = (await fBookByCategoryId).valueOrEmpty;
     final bookByCategoryIdLiterature =
         (await fBookByCategoryIdLiterature).valueOrEmpty;
-    // ÖZEL SİPARİŞ — geçici olarak kapatıldı. Bu liste tanımı gereği
-    // `Finished` olduğu için aşağıdaki `available` elemesine SOKULMAMALIYDI.
-    // final specialOrderableBooks = (await fSpecialOrderableBooks).valueOrEmpty;
 
     // Filter books by status - only show "Available" books
     final filteredNewBooks = newBooks
@@ -84,7 +78,6 @@ class HomeCubit extends Cubit<HomeState> {
       booksByLang: filteredBooksByLang,
       bookByCategoryId: filteredBookByCategoryId,
       bookByCategoryIdLiterature: filteredBookByCategoryIdLiterature,
-      // specialOrderableBooks: specialOrderableBooks,
     ));
   }
 }

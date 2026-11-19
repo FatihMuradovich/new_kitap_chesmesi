@@ -15,10 +15,6 @@ class HomeLoaded extends HomeState {
   final List<BookModel> bookByCategoryId;
   final List<BookModel> bookByCategoryIdLiterature;
 
-  // ÖZEL SİPARİŞ — geçici olarak kapatıldı.
-  // /// "Getirtebiliriz" — `status=Finished` + `specialOrderable=true`.
-  // /// Diğer listelerin aksine `available` filtresinden GEÇMEZ.
-  // final List<BookModel> specialOrderableBooks;
   HomeLoaded({
     required this.banners,
     required this.userBooks,
@@ -27,7 +23,6 @@ class HomeLoaded extends HomeState {
     required this.booksByLang,
     required this.bookByCategoryId,
     required this.bookByCategoryIdLiterature,
-    // this.specialOrderableBooks = const [],
   });
 }
 
