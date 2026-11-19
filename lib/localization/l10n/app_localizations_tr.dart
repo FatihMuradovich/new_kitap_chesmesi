@@ -30,9 +30,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tryAgain => 'Täzeden synanyş';
 
   @override
-  String get noInternetTitle => 'Internet birikmesi ýok';
-
-  @override
   String get noInternetMessage =>
       'Programmany ulanmak üçin internet birikmäňizi barlaň we gaýtadan synanyşyň.';
 
@@ -76,9 +73,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noResultsFound => 'Gözleýän kitabyňyz tapylmady!';
 
   @override
-  String get errorMessageSearch => 'Gözleg wagtynda näsazlyk ýüze çykdy!';
-
-  @override
   String get viewing => 'Gözlenilýär...';
 
   @override
@@ -98,9 +92,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get publisher => 'Neşirýat';
-
-  @override
-  String get bookLanguage => 'Dili';
 
   @override
   String get bookCover => 'Kitap daşy';
@@ -135,12 +126,6 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get commentsEmptyHint =>
       'Bu kitap hakda ilkinji reýtingi we teswiri beriň!';
-
-  @override
-  String get commentsError => 'Teswirler ýüklenip bilinmedi';
-
-  @override
-  String get commentsErrorHint => 'Teswirler ýüklenip bilinmedi';
 
   @override
   String get commentAddedSuccessfully => 'Teswiriniz üstünlikli ugradyldy!';
@@ -191,9 +176,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cartIsEmpty => 'Sebediňiz boş';
 
   @override
-  String get empty_basket => 'Sebediňiz boş';
-
-  @override
   String get amount => 'Jemi';
 
   @override
@@ -231,17 +213,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get giftPaperFee => 'Sowgatlyk kagyz tölegi:';
 
   @override
-  String get giftError => 'Sowgatlyk kagyzlarda näsazlyk ýüze çykdy!';
-
-  @override
   String get orderSuccess => 'Sargydyňyz üstünlikli tamamlandy!';
-
-  @override
-  String get orderSuccessTitle => 'Sargydyňyz üstünlikli kabul edildi';
-
-  @override
-  String get orderSuccessMessage =>
-      'Sargydyňyz üstünlikli kabul edildi. Siziň bilen habarlaşarys!';
 
   @override
   String get goIt => 'Bolýar';
@@ -298,9 +270,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get favoriteIsEmpty => 'Halanlaryňyzyň boş!';
 
   @override
-  String get empty_favorites => 'Halan harytlaryňyzyň sanawy boş!';
-
-  @override
   String get allBooks => 'Ähli kitaplar';
 
   @override
@@ -324,9 +293,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get orderStatusPending => 'Garaşylýar';
 
   @override
-  String get orderStatusCompleted => 'Tamamlandy';
-
-  @override
   String get orderStatusCancelled => 'Ýatyryldy';
 
   @override
@@ -343,9 +309,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get orderHistory => 'Sargyt taryhy';
-
-  @override
-  String get orderReceived => 'Sargyt kabul edildi';
 
   @override
   String get orderDetailTitle => 'Sargyt barada';
@@ -428,20 +391,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loading => 'Ýüklenýär...';
 
   @override
-  String get areYouSure => '';
-
-  @override
   String get deleteAccount => 'Hasaby pozmak';
 
   @override
   String get deleteAccountDescription =>
       'Hasabyňyzy pozmak isleýäňizmi? Bu hereket yzyna gaýtarylyp bilinmez!';
-
-  @override
-  String get personal_information => 'Şahsy maglumatlar';
-
-  @override
-  String get change_password => 'Paroly täzelemek';
 
   @override
   String get name => 'Adyňyz';
@@ -453,16 +407,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get your_phone_number => 'Telefon belgiňiz';
 
   @override
-  String get your_email_adress => 'E-mail adresiňiz';
-
-  @override
   String get password => 'Parolyňyz';
-
-  @override
-  String get old_password => 'Köne parolyňyz';
-
-  @override
-  String get new_password => 'Täze parolyňyz';
 
   @override
   String get birthday => 'Doglan günüňiz';
@@ -616,9 +561,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notificationIsEmptyDescription => 'Häzirlikçe size bildiriş ýok';
 
   @override
-  String get logout => 'Çykmak isleýäňizmi?';
-
-  @override
   String get registerOderSignUp => 'Ulgamyňyza giriň ýa-da täze hasap dörediň';
 
   @override
@@ -666,9 +608,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get referralCode => 'Referral kody';
-
-  @override
-  String get birthdayHint => 'Doglan günüňizi giriziň!';
 
   @override
   String get continue_button => 'Dowam et';
@@ -733,9 +672,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get selectCategoriesButton => 'Dowam et';
-
-  @override
-  String get categoriesNotLoaded => 'Kategoriýalar ýüklenmedi.';
 
   @override
   String get categoryNotFound => 'Kategoriýa tapylmady.';
@@ -817,181 +753,5 @@ class AppLocalizationsTr extends AppLocalizations {
   String get priceOnRequest => 'Bahasyny soraň';
 
   @override
-  String get specialOrderSectionTitle => 'Getirdip bileris';
-
-  @override
-  String get specialOrderBadge => 'Getirdip bolýar';
-
-  @override
-  String get myRequests => 'Talaplarym';
-
-  @override
-  String get specialOrderTitle => 'Ýörite sargyt';
-
-  @override
-  String get createSpecialOrder => 'Ýörite sargyt ber';
-
-  @override
-  String get specialOrderSheetTitle => 'Daşary ýurtdan getirdeliň';
-
-  @override
-  String get specialOrderSheetInfo =>
-      'Talap açyň — bahasyny anyklap, size teklip iberer ýaly.';
-
-  @override
-  String get specialOrderNoteHint => 'Islegiňiz (hökman däl)';
-
-  @override
-  String get sendRequest => 'Talap iber';
-
-  @override
-  String get specialOrderRequestSent =>
-      'Talabyňyz kabul edildi. Teklip taýýar bolanda habar bereris.';
-
-  @override
   String get quantity => 'Sany';
-
-  @override
-  String get specialOrderStatusPending => 'Garaşylýar';
-
-  @override
-  String get specialOrderStatusQuoted => 'Teklip taýýar';
-
-  @override
-  String get specialOrderStatusApproved => 'Tassyklandy';
-
-  @override
-  String get specialOrderStatusRejected => 'Ret edildi';
-
-  @override
-  String get specialOrderStatusExpired => 'Möhleti gutardy';
-
-  @override
-  String get specialOrderStatusCancelled => 'Ýatyryldy';
-
-  @override
-  String get specialOrderStatusUnavailable => 'Getirip bolmaýar';
-
-  @override
-  String get supplyStatusTitle => 'Getirilişi';
-
-  @override
-  String get supplyStatusPreparing => 'Taýýarlanýar';
-
-  @override
-  String get supplyStatusOrderedAbroad => 'Daşary ýurtdan sargyt edildi';
-
-  @override
-  String get supplyStatusInTransit => 'Ýolda';
-
-  @override
-  String get supplyStatusArrived => 'Geldi';
-
-  @override
-  String requestNumber(int id) {
-    return 'Talap №$id';
-  }
-
-  @override
-  String get activeRequest => 'Häzirki talap';
-
-  @override
-  String get requestHistory => 'Talap taryhy';
-
-  @override
-  String get emptyRequests => 'Talabyňyz ýok';
-
-  @override
-  String get emptyRequestsHint =>
-      'Stokda ýok kitaby daşary ýurtdan getirdip bileris.';
-
-  @override
-  String get requestNotFound => 'Talap tapylmady';
-
-  @override
-  String get deliveryMethodLabel => 'Getirmek usuly';
-
-  @override
-  String deliveryMethodDays(int min, int max) {
-    return '$min–$max gün';
-  }
-
-  @override
-  String get selectDeliveryMethod => 'Getirmek usulyny saýlaň';
-
-  @override
-  String get selectBooks => 'Kitaplary saýlaň';
-
-  @override
-  String get itemUnavailable => 'Getirip bolmaýar';
-
-  @override
-  String get noPriceForMethod => 'Bu usul bilen getirip bolmaýar';
-
-  @override
-  String get adminNoteTitle => 'Dükanyň belligi';
-
-  @override
-  String quoteExpiresAt(String date) {
-    return 'Teklibiň möhleti: $date';
-  }
-
-  @override
-  String get quoteExpired => 'Teklibiň möhleti gutardy';
-
-  @override
-  String get productsTotal => 'Kitaplaryň bahasy';
-
-  @override
-  String get approveQuote => 'Tassykla';
-
-  @override
-  String get rejectQuote => 'Ret et';
-
-  @override
-  String get cancelRequest => 'Talaby ýatyr';
-
-  @override
-  String get rejectQuoteConfirmTitle => 'Teklip ret edilsinmi?';
-
-  @override
-  String get rejectQuoteConfirmMessage =>
-      'Bu teklip ret ediler. Bu hereketi yzyna gaýtaryp bolmaýar.';
-
-  @override
-  String get cancelRequestConfirmTitle => 'Talap ýatyrylsynmy?';
-
-  @override
-  String get cancelRequestConfirmMessage =>
-      'Bu talap ýatyrylar. Bu hereketi yzyna gaýtaryp bolmaýar.';
-
-  @override
-  String get quoteRejectedSuccess => 'Teklip ret edildi';
-
-  @override
-  String get requestCancelledSuccess => 'Talabyňyz ýatyryldy';
-
-  @override
-  String get requestActionNotAllowed =>
-      'Bu hereketi indi ýerine ýetirip bolmaýar.';
-
-  @override
-  String get selectAtLeastOneBook => 'Iň azyndan bir kitap saýlaň';
-
-  @override
-  String get estimatedArrival => 'Takmynan geler';
-
-  @override
-  String get specialOrderNoCoupon => 'Ýörite sargytda kupon ulanyp bolmaýar';
-
-  @override
-  String get bookAlreadyInOpenRequest => 'Bu kitap açyk talabyňyzda eýýäm bar';
-
-  @override
-  String get bookNotSpecialOrderable =>
-      'Bu kitaby ýörite sargyt bilen getirip bolmaýar';
-
-  @override
-  String get specialOrderCreateFailed =>
-      'Talap açyp bolmady. Soňrak synanyşyň.';
 }

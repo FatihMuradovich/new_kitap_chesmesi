@@ -30,9 +30,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tryAgain => 'Попробуйте еще раз';
 
   @override
-  String get noInternetTitle => 'Нет подключения к интернету';
-
-  @override
   String get noInternetMessage =>
       'Пожалуйста, проверьте подключение к интернету и попробуйте снова.';
 
@@ -76,9 +73,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noResultsFound => 'Книга не найдена!';
 
   @override
-  String get errorMessageSearch => 'Произошла ошибка при поиске!';
-
-  @override
   String get viewing => 'Просмотр...';
 
   @override
@@ -98,9 +92,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get publisher => 'Издатель';
-
-  @override
-  String get bookLanguage => 'Язык';
 
   @override
   String get bookCover => 'Обложка книги';
@@ -135,14 +126,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get commentsEmptyHint =>
       'Пожалуйста, добавьте первую рецензию и отзыв для этой книги!';
-
-  @override
-  String get commentsError =>
-      'Произошла ошибка при загрузке рецензий и отзывов';
-
-  @override
-  String get commentsErrorHint =>
-      'Произошла ошибка при загрузке рецензий и отзывов';
 
   @override
   String get commentAddedSuccessfully => 'Ваш комментарий успешно отправлен!';
@@ -194,9 +177,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cartIsEmpty => 'Ваша корзина пуста';
 
   @override
-  String get empty_basket => 'Ваша карзина пуста';
-
-  @override
   String get amount => 'Количество';
 
   @override
@@ -233,17 +213,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get giftPaperFee => 'Плата за подарочную упаковку:';
 
   @override
-  String get giftError => 'Произошла ошибка при упаковке подарка!';
-
-  @override
   String get orderSuccess => 'Ваш заказ успешно выполнен!';
-
-  @override
-  String get orderSuccessTitle => 'Ваш заказ был успешно получен';
-
-  @override
-  String get orderSuccessMessage =>
-      'Ваш заказ был успешно получен. Мы свяжемся с вами в ближайшее время!';
 
   @override
   String get goIt => 'Понятно';
@@ -300,9 +270,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get favoriteIsEmpty => 'Избранное пусто!';
 
   @override
-  String get empty_favorites => 'Ваш cписок избранного пуст!';
-
-  @override
   String get allBooks => 'Все книги';
 
   @override
@@ -326,9 +293,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get orderStatusPending => 'В обработке';
 
   @override
-  String get orderStatusCompleted => 'Завершён';
-
-  @override
   String get orderStatusCancelled => 'Отменён';
 
   @override
@@ -345,9 +309,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get orderHistory => 'История заказов';
-
-  @override
-  String get orderReceived => 'Заказ получен';
 
   @override
   String get orderDetailTitle => 'Детали заказа';
@@ -430,20 +391,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loading => 'Загрузка...';
 
   @override
-  String get areYouSure => '';
-
-  @override
   String get deleteAccount => 'Удалить аккаунт';
 
   @override
   String get deleteAccountDescription =>
       'Вы уверены, что хотите удалить свой аккаунт? Это действие не может быть отменено!';
-
-  @override
-  String get personal_information => 'Персональная информация';
-
-  @override
-  String get change_password => 'Изменить пароль';
 
   @override
   String get name => 'Имя';
@@ -455,16 +407,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get your_phone_number => 'Номер телефона';
 
   @override
-  String get your_email_adress => 'Электронная почта';
-
-  @override
   String get password => 'Ваш пароль';
-
-  @override
-  String get old_password => 'Старый пароль';
-
-  @override
-  String get new_password => 'Новый пароль';
 
   @override
   String get birthday => 'День рождения';
@@ -617,9 +560,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notificationIsEmptyDescription => 'Нет уведомлений для сейчас';
 
   @override
-  String get logout => 'Выйти из аккаунта?';
-
-  @override
   String get registerOderSignUp =>
       'Войдите в учетную запись или зарегистрируйтесь для получения доступа';
 
@@ -667,9 +607,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get referralCode => 'Реферальный код';
-
-  @override
-  String get birthdayHint => 'Введите ваш день рождения';
 
   @override
   String get continue_button => 'Продолжить';
@@ -733,9 +670,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get selectCategoriesButton => 'Продолжить';
-
-  @override
-  String get categoriesNotLoaded => 'Категории не загружены.';
 
   @override
   String get categoryNotFound => 'Категория не найдена.';
@@ -817,181 +751,5 @@ class AppLocalizationsRu extends AppLocalizations {
   String get priceOnRequest => 'Цена по запросу';
 
   @override
-  String get specialOrderSectionTitle => 'Можем привезти';
-
-  @override
-  String get specialOrderBadge => 'Можно заказать';
-
-  @override
-  String get myRequests => 'Мои заявки';
-
-  @override
-  String get specialOrderTitle => 'Особый заказ';
-
-  @override
-  String get createSpecialOrder => 'Оформить особый заказ';
-
-  @override
-  String get specialOrderSheetTitle => 'Привезём из-за рубежа';
-
-  @override
-  String get specialOrderSheetInfo =>
-      'Оставьте заявку — мы уточним цену и пришлём вам предложение.';
-
-  @override
-  String get specialOrderNoteHint => 'Ваше пожелание (необязательно)';
-
-  @override
-  String get sendRequest => 'Отправить заявку';
-
-  @override
-  String get specialOrderRequestSent =>
-      'Заявка принята. Мы сообщим, когда предложение будет готово.';
-
-  @override
   String get quantity => 'Количество';
-
-  @override
-  String get specialOrderStatusPending => 'В ожидании';
-
-  @override
-  String get specialOrderStatusQuoted => 'Предложение готово';
-
-  @override
-  String get specialOrderStatusApproved => 'Подтверждено';
-
-  @override
-  String get specialOrderStatusRejected => 'Отклонено';
-
-  @override
-  String get specialOrderStatusExpired => 'Срок истёк';
-
-  @override
-  String get specialOrderStatusCancelled => 'Отменено';
-
-  @override
-  String get specialOrderStatusUnavailable => 'Привезти нельзя';
-
-  @override
-  String get supplyStatusTitle => 'Ход доставки';
-
-  @override
-  String get supplyStatusPreparing => 'Готовится';
-
-  @override
-  String get supplyStatusOrderedAbroad => 'Заказано за рубежом';
-
-  @override
-  String get supplyStatusInTransit => 'В пути';
-
-  @override
-  String get supplyStatusArrived => 'Прибыло';
-
-  @override
-  String requestNumber(int id) {
-    return 'Заявка №$id';
-  }
-
-  @override
-  String get activeRequest => 'Текущая заявка';
-
-  @override
-  String get requestHistory => 'История заявок';
-
-  @override
-  String get emptyRequests => 'У вас нет заявок';
-
-  @override
-  String get emptyRequestsHint =>
-      'Книги, которых нет в наличии, мы можем привезти из-за рубежа.';
-
-  @override
-  String get requestNotFound => 'Заявка не найдена';
-
-  @override
-  String get deliveryMethodLabel => 'Способ доставки';
-
-  @override
-  String deliveryMethodDays(int min, int max) {
-    return '$min–$max дней';
-  }
-
-  @override
-  String get selectDeliveryMethod => 'Выберите способ доставки';
-
-  @override
-  String get selectBooks => 'Выберите книги';
-
-  @override
-  String get itemUnavailable => 'Недоступно';
-
-  @override
-  String get noPriceForMethod => 'Недоступно этим способом';
-
-  @override
-  String get adminNoteTitle => 'Примечание магазина';
-
-  @override
-  String quoteExpiresAt(String date) {
-    return 'Предложение действует до: $date';
-  }
-
-  @override
-  String get quoteExpired => 'Срок предложения истёк';
-
-  @override
-  String get productsTotal => 'Стоимость книг';
-
-  @override
-  String get approveQuote => 'Подтвердить';
-
-  @override
-  String get rejectQuote => 'Отклонить';
-
-  @override
-  String get cancelRequest => 'Отменить заявку';
-
-  @override
-  String get rejectQuoteConfirmTitle => 'Отклонить предложение?';
-
-  @override
-  String get rejectQuoteConfirmMessage =>
-      'Предложение будет отклонено. Это действие нельзя отменить.';
-
-  @override
-  String get cancelRequestConfirmTitle => 'Отменить заявку?';
-
-  @override
-  String get cancelRequestConfirmMessage =>
-      'Заявка будет отменена. Это действие нельзя отменить.';
-
-  @override
-  String get quoteRejectedSuccess => 'Предложение отклонено';
-
-  @override
-  String get requestCancelledSuccess => 'Ваша заявка отменена';
-
-  @override
-  String get requestActionNotAllowed => 'Это действие больше недоступно.';
-
-  @override
-  String get selectAtLeastOneBook => 'Выберите хотя бы одну книгу';
-
-  @override
-  String get estimatedArrival => 'Ожидаемое прибытие';
-
-  @override
-  String get specialOrderNoCoupon => 'Купоны не действуют для особых заказов';
-
-  @override
-  String get bookAlreadyInOpenRequest =>
-      'Эта книга уже есть в одной из ваших открытых заявок';
-
-  @override
-  String get bookNotSpecialOrderable =>
-      'Эту книгу нельзя заказать особым заказом';
-
-  @override
-  String get specialOrderCreateFailed =>
-      'Не удалось создать заявку. Попробуйте позже.';
 }

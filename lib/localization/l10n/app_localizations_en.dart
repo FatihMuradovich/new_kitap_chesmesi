@@ -30,9 +30,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tryAgain => 'Try again';
 
   @override
-  String get noInternetTitle => 'No internet connection';
-
-  @override
   String get noInternetMessage =>
       'Please check your internet connection and try again.';
 
@@ -76,9 +73,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noResultsFound => 'Book not found!';
 
   @override
-  String get errorMessageSearch => 'An error occurred while searching!';
-
-  @override
   String get viewing => 'Loading...';
 
   @override
@@ -98,9 +92,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get publisher => 'Publisher';
-
-  @override
-  String get bookLanguage => 'Language';
 
   @override
   String get bookCover => 'Book cover';
@@ -135,12 +126,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get commentsEmptyHint =>
       'Please add the first rating and comment for this book!';
-
-  @override
-  String get commentsError => 'Ratings and comments could not be loaded';
-
-  @override
-  String get commentsErrorHint => 'Ratings and comments could not be loaded';
 
   @override
   String get commentAddedSuccessfully =>
@@ -192,9 +177,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cartIsEmpty => 'Your cart is empty';
 
   @override
-  String get empty_basket => 'Your cart is empty';
-
-  @override
   String get amount => 'Amount';
 
   @override
@@ -231,17 +213,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get giftPaperFee => 'Gift paper fee:';
 
   @override
-  String get giftError => 'Error loading gift covers!';
-
-  @override
   String get orderSuccess => 'Your order has been successfully completed!';
-
-  @override
-  String get orderSuccessTitle => 'Your order was successfully received';
-
-  @override
-  String get orderSuccessMessage =>
-      'Your order has been successfully received. We will contact you soon!';
 
   @override
   String get goIt => 'Got it';
@@ -299,9 +271,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get favoriteIsEmpty => 'Your favorite is empty!';
 
   @override
-  String get empty_favorites => 'Your favorites list is empty!';
-
-  @override
   String get allBooks => 'All Books';
 
   @override
@@ -325,9 +294,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderStatusPending => 'Pending';
 
   @override
-  String get orderStatusCompleted => 'Completed';
-
-  @override
   String get orderStatusCancelled => 'Cancelled';
 
   @override
@@ -344,9 +310,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderHistory => 'Order History';
-
-  @override
-  String get orderReceived => 'Order received';
 
   @override
   String get orderDetailTitle => 'Order details';
@@ -430,20 +393,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading...';
 
   @override
-  String get areYouSure => '';
-
-  @override
   String get deleteAccount => 'Delete account';
 
   @override
   String get deleteAccountDescription =>
       'Are you sure you want to delete your account? This action cannot be undone!';
-
-  @override
-  String get personal_information => 'Personal information';
-
-  @override
-  String get change_password => 'Change password';
 
   @override
   String get name => 'Name';
@@ -455,16 +409,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get your_phone_number => 'Phone number';
 
   @override
-  String get your_email_adress => 'E-mail';
-
-  @override
   String get password => 'Password';
-
-  @override
-  String get old_password => 'Old password';
-
-  @override
-  String get new_password => 'New password';
 
   @override
   String get birthday => 'Birthday';
@@ -618,9 +563,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationIsEmptyDescription => 'No notifications for now';
 
   @override
-  String get logout => 'Do you want to logout?';
-
-  @override
   String get registerOderSignUp => 'Sign in or create an account';
 
   @override
@@ -668,9 +610,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get referralCode => 'Referral code';
-
-  @override
-  String get birthdayHint => 'Enter your birthday';
 
   @override
   String get continue_button => 'Continue';
@@ -734,9 +673,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectCategoriesButton => 'Continue';
-
-  @override
-  String get categoriesNotLoaded => 'Categories not loaded.';
 
   @override
   String get categoryNotFound => 'Category not found.';
@@ -818,181 +754,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get priceOnRequest => 'Price on request';
 
   @override
-  String get specialOrderSectionTitle => 'We can bring it';
-
-  @override
-  String get specialOrderBadge => 'Can be ordered';
-
-  @override
-  String get myRequests => 'My requests';
-
-  @override
-  String get specialOrderTitle => 'Special order';
-
-  @override
-  String get createSpecialOrder => 'Place a special order';
-
-  @override
-  String get specialOrderSheetTitle => 'Bring it from abroad';
-
-  @override
-  String get specialOrderSheetInfo =>
-      'Open a request — we will check the price and send you a quote.';
-
-  @override
-  String get specialOrderNoteHint => 'Your note (optional)';
-
-  @override
-  String get sendRequest => 'Send request';
-
-  @override
-  String get specialOrderRequestSent =>
-      'Your request has been received. We will notify you when the quote is ready.';
-
-  @override
   String get quantity => 'Quantity';
-
-  @override
-  String get specialOrderStatusPending => 'Pending';
-
-  @override
-  String get specialOrderStatusQuoted => 'Quote ready';
-
-  @override
-  String get specialOrderStatusApproved => 'Approved';
-
-  @override
-  String get specialOrderStatusRejected => 'Rejected';
-
-  @override
-  String get specialOrderStatusExpired => 'Expired';
-
-  @override
-  String get specialOrderStatusCancelled => 'Cancelled';
-
-  @override
-  String get specialOrderStatusUnavailable => 'Unavailable';
-
-  @override
-  String get supplyStatusTitle => 'Supply progress';
-
-  @override
-  String get supplyStatusPreparing => 'Preparing';
-
-  @override
-  String get supplyStatusOrderedAbroad => 'Ordered abroad';
-
-  @override
-  String get supplyStatusInTransit => 'In transit';
-
-  @override
-  String get supplyStatusArrived => 'Arrived';
-
-  @override
-  String requestNumber(int id) {
-    return 'Request #$id';
-  }
-
-  @override
-  String get activeRequest => 'Active request';
-
-  @override
-  String get requestHistory => 'Request history';
-
-  @override
-  String get emptyRequests => 'You have no requests';
-
-  @override
-  String get emptyRequestsHint =>
-      'We can bring books that are out of stock from abroad.';
-
-  @override
-  String get requestNotFound => 'Request not found';
-
-  @override
-  String get deliveryMethodLabel => 'Delivery method';
-
-  @override
-  String deliveryMethodDays(int min, int max) {
-    return '$min–$max days';
-  }
-
-  @override
-  String get selectDeliveryMethod => 'Select a delivery method';
-
-  @override
-  String get selectBooks => 'Select books';
-
-  @override
-  String get itemUnavailable => 'Unavailable';
-
-  @override
-  String get noPriceForMethod => 'Not available with this method';
-
-  @override
-  String get adminNoteTitle => 'Note from the store';
-
-  @override
-  String quoteExpiresAt(String date) {
-    return 'Quote valid until: $date';
-  }
-
-  @override
-  String get quoteExpired => 'This quote has expired';
-
-  @override
-  String get productsTotal => 'Books total';
-
-  @override
-  String get approveQuote => 'Approve';
-
-  @override
-  String get rejectQuote => 'Reject';
-
-  @override
-  String get cancelRequest => 'Cancel request';
-
-  @override
-  String get rejectQuoteConfirmTitle => 'Reject this quote?';
-
-  @override
-  String get rejectQuoteConfirmMessage =>
-      'This quote will be rejected. This action cannot be undone.';
-
-  @override
-  String get cancelRequestConfirmTitle => 'Cancel this request?';
-
-  @override
-  String get cancelRequestConfirmMessage =>
-      'This request will be cancelled. This action cannot be undone.';
-
-  @override
-  String get quoteRejectedSuccess => 'Quote rejected';
-
-  @override
-  String get requestCancelledSuccess => 'Your request has been cancelled';
-
-  @override
-  String get requestActionNotAllowed => 'This action is no longer possible.';
-
-  @override
-  String get selectAtLeastOneBook => 'Select at least one book';
-
-  @override
-  String get estimatedArrival => 'Estimated arrival';
-
-  @override
-  String get specialOrderNoCoupon =>
-      'Coupons cannot be used for special orders';
-
-  @override
-  String get bookAlreadyInOpenRequest =>
-      'This book is already in one of your open requests';
-
-  @override
-  String get bookNotSpecialOrderable => 'This book cannot be ordered specially';
-
-  @override
-  String get specialOrderCreateFailed =>
-      'The request could not be created. Please try again later.';
 }

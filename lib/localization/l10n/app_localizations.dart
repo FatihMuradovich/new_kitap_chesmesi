@@ -142,12 +142,6 @@ abstract class AppLocalizations {
   /// **'Try again'**
   String get tryAgain;
 
-  /// No description provided for @noInternetTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'No internet connection'**
-  String get noInternetTitle;
-
   /// No description provided for @noInternetMessage.
   ///
   /// In en, this message translates to:
@@ -232,12 +226,6 @@ abstract class AppLocalizations {
   /// **'Book not found!'**
   String get noResultsFound;
 
-  /// No description provided for @errorMessageSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'An error occurred while searching!'**
-  String get errorMessageSearch;
-
   /// No description provided for @viewing.
   ///
   /// In en, this message translates to:
@@ -279,12 +267,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Publisher'**
   String get publisher;
-
-  /// No description provided for @bookLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get bookLanguage;
 
   /// No description provided for @bookCover.
   ///
@@ -351,18 +333,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please add the first rating and comment for this book!'**
   String get commentsEmptyHint;
-
-  /// No description provided for @commentsError.
-  ///
-  /// In en, this message translates to:
-  /// **'Ratings and comments could not be loaded'**
-  String get commentsError;
-
-  /// No description provided for @commentsErrorHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Ratings and comments could not be loaded'**
-  String get commentsErrorHint;
 
   /// No description provided for @commentAddedSuccessfully.
   ///
@@ -460,12 +430,6 @@ abstract class AppLocalizations {
   /// **'Your cart is empty'**
   String get cartIsEmpty;
 
-  /// No description provided for @empty_basket.
-  ///
-  /// In en, this message translates to:
-  /// **'Your cart is empty'**
-  String get empty_basket;
-
   /// No description provided for @amount.
   ///
   /// In en, this message translates to:
@@ -538,29 +502,11 @@ abstract class AppLocalizations {
   /// **'Gift paper fee:'**
   String get giftPaperFee;
 
-  /// No description provided for @giftError.
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading gift covers!'**
-  String get giftError;
-
   /// No description provided for @orderSuccess.
   ///
   /// In en, this message translates to:
   /// **'Your order has been successfully completed!'**
   String get orderSuccess;
-
-  /// No description provided for @orderSuccessTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your order was successfully received'**
-  String get orderSuccessTitle;
-
-  /// No description provided for @orderSuccessMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Your order has been successfully received. We will contact you soon!'**
-  String get orderSuccessMessage;
 
   /// No description provided for @goIt.
   ///
@@ -670,12 +616,6 @@ abstract class AppLocalizations {
   /// **'Your favorite is empty!'**
   String get favoriteIsEmpty;
 
-  /// No description provided for @empty_favorites.
-  ///
-  /// In en, this message translates to:
-  /// **'Your favorites list is empty!'**
-  String get empty_favorites;
-
   /// No description provided for @allBooks.
   ///
   /// In en, this message translates to:
@@ -718,12 +658,6 @@ abstract class AppLocalizations {
   /// **'Pending'**
   String get orderStatusPending;
 
-  /// No description provided for @orderStatusCompleted.
-  ///
-  /// In en, this message translates to:
-  /// **'Completed'**
-  String get orderStatusCompleted;
-
   /// No description provided for @orderStatusCancelled.
   ///
   /// In en, this message translates to:
@@ -759,12 +693,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order History'**
   String get orderHistory;
-
-  /// No description provided for @orderReceived.
-  ///
-  /// In en, this message translates to:
-  /// **'Order received'**
-  String get orderReceived;
 
   /// No description provided for @orderDetailTitle.
   ///
@@ -922,12 +850,6 @@ abstract class AppLocalizations {
   /// **'Loading...'**
   String get loading;
 
-  /// No description provided for @areYouSure.
-  ///
-  /// In en, this message translates to:
-  /// **''**
-  String get areYouSure;
-
   /// No description provided for @deleteAccount.
   ///
   /// In en, this message translates to:
@@ -939,18 +861,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete your account? This action cannot be undone!'**
   String get deleteAccountDescription;
-
-  /// No description provided for @personal_information.
-  ///
-  /// In en, this message translates to:
-  /// **'Personal information'**
-  String get personal_information;
-
-  /// No description provided for @change_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Change password'**
-  String get change_password;
 
   /// No description provided for @name.
   ///
@@ -970,29 +880,11 @@ abstract class AppLocalizations {
   /// **'Phone number'**
   String get your_phone_number;
 
-  /// No description provided for @your_email_adress.
-  ///
-  /// In en, this message translates to:
-  /// **'E-mail'**
-  String get your_email_adress;
-
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
   /// **'Password'**
   String get password;
-
-  /// No description provided for @old_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Old password'**
-  String get old_password;
-
-  /// No description provided for @new_password.
-  ///
-  /// In en, this message translates to:
-  /// **'New password'**
-  String get new_password;
 
   /// No description provided for @birthday.
   ///
@@ -1276,12 +1168,6 @@ abstract class AppLocalizations {
   /// **'No notifications for now'**
   String get notificationIsEmptyDescription;
 
-  /// No description provided for @logout.
-  ///
-  /// In en, this message translates to:
-  /// **'Do you want to logout?'**
-  String get logout;
-
   /// No description provided for @registerOderSignUp.
   ///
   /// In en, this message translates to:
@@ -1377,12 +1263,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Referral code'**
   String get referralCode;
-
-  /// No description provided for @birthdayHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter your birthday'**
-  String get birthdayHint;
 
   /// No description provided for @continue_button.
   ///
@@ -1503,12 +1383,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue'**
   String get selectCategoriesButton;
-
-  /// No description provided for @categoriesNotLoaded.
-  ///
-  /// In en, this message translates to:
-  /// **'Categories not loaded.'**
-  String get categoriesNotLoaded;
 
   /// No description provided for @categoryNotFound.
   ///
@@ -1666,335 +1540,11 @@ abstract class AppLocalizations {
   /// **'Price on request'**
   String get priceOnRequest;
 
-  /// No description provided for @specialOrderSectionTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'We can bring it'**
-  String get specialOrderSectionTitle;
-
-  /// No description provided for @specialOrderBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'Can be ordered'**
-  String get specialOrderBadge;
-
-  /// No description provided for @myRequests.
-  ///
-  /// In en, this message translates to:
-  /// **'My requests'**
-  String get myRequests;
-
-  /// No description provided for @specialOrderTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Special order'**
-  String get specialOrderTitle;
-
-  /// No description provided for @createSpecialOrder.
-  ///
-  /// In en, this message translates to:
-  /// **'Place a special order'**
-  String get createSpecialOrder;
-
-  /// No description provided for @specialOrderSheetTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Bring it from abroad'**
-  String get specialOrderSheetTitle;
-
-  /// No description provided for @specialOrderSheetInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'Open a request — we will check the price and send you a quote.'**
-  String get specialOrderSheetInfo;
-
-  /// No description provided for @specialOrderNoteHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Your note (optional)'**
-  String get specialOrderNoteHint;
-
-  /// No description provided for @sendRequest.
-  ///
-  /// In en, this message translates to:
-  /// **'Send request'**
-  String get sendRequest;
-
-  /// No description provided for @specialOrderRequestSent.
-  ///
-  /// In en, this message translates to:
-  /// **'Your request has been received. We will notify you when the quote is ready.'**
-  String get specialOrderRequestSent;
-
   /// No description provided for @quantity.
   ///
   /// In en, this message translates to:
   /// **'Quantity'**
   String get quantity;
-
-  /// No description provided for @specialOrderStatusPending.
-  ///
-  /// In en, this message translates to:
-  /// **'Pending'**
-  String get specialOrderStatusPending;
-
-  /// No description provided for @specialOrderStatusQuoted.
-  ///
-  /// In en, this message translates to:
-  /// **'Quote ready'**
-  String get specialOrderStatusQuoted;
-
-  /// No description provided for @specialOrderStatusApproved.
-  ///
-  /// In en, this message translates to:
-  /// **'Approved'**
-  String get specialOrderStatusApproved;
-
-  /// No description provided for @specialOrderStatusRejected.
-  ///
-  /// In en, this message translates to:
-  /// **'Rejected'**
-  String get specialOrderStatusRejected;
-
-  /// No description provided for @specialOrderStatusExpired.
-  ///
-  /// In en, this message translates to:
-  /// **'Expired'**
-  String get specialOrderStatusExpired;
-
-  /// No description provided for @specialOrderStatusCancelled.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancelled'**
-  String get specialOrderStatusCancelled;
-
-  /// No description provided for @specialOrderStatusUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'Unavailable'**
-  String get specialOrderStatusUnavailable;
-
-  /// No description provided for @supplyStatusTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Supply progress'**
-  String get supplyStatusTitle;
-
-  /// No description provided for @supplyStatusPreparing.
-  ///
-  /// In en, this message translates to:
-  /// **'Preparing'**
-  String get supplyStatusPreparing;
-
-  /// No description provided for @supplyStatusOrderedAbroad.
-  ///
-  /// In en, this message translates to:
-  /// **'Ordered abroad'**
-  String get supplyStatusOrderedAbroad;
-
-  /// No description provided for @supplyStatusInTransit.
-  ///
-  /// In en, this message translates to:
-  /// **'In transit'**
-  String get supplyStatusInTransit;
-
-  /// No description provided for @supplyStatusArrived.
-  ///
-  /// In en, this message translates to:
-  /// **'Arrived'**
-  String get supplyStatusArrived;
-
-  /// No description provided for @requestNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Request #{id}'**
-  String requestNumber(int id);
-
-  /// No description provided for @activeRequest.
-  ///
-  /// In en, this message translates to:
-  /// **'Active request'**
-  String get activeRequest;
-
-  /// No description provided for @requestHistory.
-  ///
-  /// In en, this message translates to:
-  /// **'Request history'**
-  String get requestHistory;
-
-  /// No description provided for @emptyRequests.
-  ///
-  /// In en, this message translates to:
-  /// **'You have no requests'**
-  String get emptyRequests;
-
-  /// No description provided for @emptyRequestsHint.
-  ///
-  /// In en, this message translates to:
-  /// **'We can bring books that are out of stock from abroad.'**
-  String get emptyRequestsHint;
-
-  /// No description provided for @requestNotFound.
-  ///
-  /// In en, this message translates to:
-  /// **'Request not found'**
-  String get requestNotFound;
-
-  /// No description provided for @deliveryMethodLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Delivery method'**
-  String get deliveryMethodLabel;
-
-  /// No description provided for @deliveryMethodDays.
-  ///
-  /// In en, this message translates to:
-  /// **'{min}–{max} days'**
-  String deliveryMethodDays(int min, int max);
-
-  /// No description provided for @selectDeliveryMethod.
-  ///
-  /// In en, this message translates to:
-  /// **'Select a delivery method'**
-  String get selectDeliveryMethod;
-
-  /// No description provided for @selectBooks.
-  ///
-  /// In en, this message translates to:
-  /// **'Select books'**
-  String get selectBooks;
-
-  /// No description provided for @itemUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'Unavailable'**
-  String get itemUnavailable;
-
-  /// No description provided for @noPriceForMethod.
-  ///
-  /// In en, this message translates to:
-  /// **'Not available with this method'**
-  String get noPriceForMethod;
-
-  /// No description provided for @adminNoteTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Note from the store'**
-  String get adminNoteTitle;
-
-  /// No description provided for @quoteExpiresAt.
-  ///
-  /// In en, this message translates to:
-  /// **'Quote valid until: {date}'**
-  String quoteExpiresAt(String date);
-
-  /// No description provided for @quoteExpired.
-  ///
-  /// In en, this message translates to:
-  /// **'This quote has expired'**
-  String get quoteExpired;
-
-  /// No description provided for @productsTotal.
-  ///
-  /// In en, this message translates to:
-  /// **'Books total'**
-  String get productsTotal;
-
-  /// No description provided for @approveQuote.
-  ///
-  /// In en, this message translates to:
-  /// **'Approve'**
-  String get approveQuote;
-
-  /// No description provided for @rejectQuote.
-  ///
-  /// In en, this message translates to:
-  /// **'Reject'**
-  String get rejectQuote;
-
-  /// No description provided for @cancelRequest.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel request'**
-  String get cancelRequest;
-
-  /// No description provided for @rejectQuoteConfirmTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Reject this quote?'**
-  String get rejectQuoteConfirmTitle;
-
-  /// No description provided for @rejectQuoteConfirmMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'This quote will be rejected. This action cannot be undone.'**
-  String get rejectQuoteConfirmMessage;
-
-  /// No description provided for @cancelRequestConfirmTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel this request?'**
-  String get cancelRequestConfirmTitle;
-
-  /// No description provided for @cancelRequestConfirmMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'This request will be cancelled. This action cannot be undone.'**
-  String get cancelRequestConfirmMessage;
-
-  /// No description provided for @quoteRejectedSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Quote rejected'**
-  String get quoteRejectedSuccess;
-
-  /// No description provided for @requestCancelledSuccess.
-  ///
-  /// In en, this message translates to:
-  /// **'Your request has been cancelled'**
-  String get requestCancelledSuccess;
-
-  /// No description provided for @requestActionNotAllowed.
-  ///
-  /// In en, this message translates to:
-  /// **'This action is no longer possible.'**
-  String get requestActionNotAllowed;
-
-  /// No description provided for @selectAtLeastOneBook.
-  ///
-  /// In en, this message translates to:
-  /// **'Select at least one book'**
-  String get selectAtLeastOneBook;
-
-  /// No description provided for @estimatedArrival.
-  ///
-  /// In en, this message translates to:
-  /// **'Estimated arrival'**
-  String get estimatedArrival;
-
-  /// No description provided for @specialOrderNoCoupon.
-  ///
-  /// In en, this message translates to:
-  /// **'Coupons cannot be used for special orders'**
-  String get specialOrderNoCoupon;
-
-  /// No description provided for @bookAlreadyInOpenRequest.
-  ///
-  /// In en, this message translates to:
-  /// **'This book is already in one of your open requests'**
-  String get bookAlreadyInOpenRequest;
-
-  /// No description provided for @bookNotSpecialOrderable.
-  ///
-  /// In en, this message translates to:
-  /// **'This book cannot be ordered specially'**
-  String get bookNotSpecialOrderable;
-
-  /// No description provided for @specialOrderCreateFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'The request could not be created. Please try again later.'**
-  String get specialOrderCreateFailed;
 }
 
 class _AppLocalizationsDelegate
