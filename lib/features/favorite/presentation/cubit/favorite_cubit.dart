@@ -17,11 +17,15 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       // Filter only available books
       final availableFavorites = favoriteBooks.where((book) => book.status.toLowerCase() == 'available').toList();
       _favoriteBooks = availableFavorites;
+      _hasLoaded = true;
       emit(FavoriteLoaded(favorites: availableFavorites));
     } catch (e) {
       emit(FavoriteError(e.toString()));
     }
   }
+
+  /// Sunucudaki liste en az bir kez başarıyla alındı mı.
+  bool _hasLoaded = false;
 
   bool isBookFavorite(int bookId) {
     return _favoriteBooks.any((book) => book.id == bookId);
@@ -31,6 +35,7 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   /// ile [_favoriteBooks]'tan okunduğu için state ile birlikte liste de silinir.
   void reset() {
     _favoriteBooks = [];
+    _hasLoaded = false;
     emit(FavoriteInitial());
   }
 
@@ -128,6 +133,14 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   }
 
   Future<void> toggleFavorite(int bookId) async {
+    // Kalp, favori listesinden okunur. Liste henüz yüklenmemişse (oturum yeni
+    // açıldı, yavaş internet) her kitap "favori değil" görünür ve zaten favori
+    // olan kitap tekrar eklenmeye çalışılırdı. Önce listeyi yükle; yüklenemezse
+    // yanlış işlem yapmaktansa hiçbir şey yapma.
+    if (!_hasLoaded) {
+      await getFavoriteBooks();
+      if (!_hasLoaded) return;
+    }
     final isFavorite = isBookFavorite(bookId);
     if (isFavorite) {
       await removeFavorite(bookId);

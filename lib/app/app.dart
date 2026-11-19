@@ -18,6 +18,7 @@ import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_cod
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/category_cubit.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/cubit/subcategory_cubit.dart';
 import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/favorite_cubit.dart';
+import 'package:new_kitap_chesmesi/features/favorite/presentation/cubit/favorite_state.dart';
 import 'package:new_kitap_chesmesi/features/home/presentation/cubit/banner/banner_cubit.dart';
 import 'package:new_kitap_chesmesi/features/home/presentation/cubit/home/home_cubit.dart';
 import 'package:new_kitap_chesmesi/features/home/presentation/cubit/notification/notification_cubit.dart';
@@ -209,6 +210,7 @@ class _SessionStartListenerState extends State<_SessionStartListener> {
         .listen((_) {
       if (mounted) retryFailedLoads(context);
     });
+    _loadFavoritesIfLoggedIn();
   }
 
   @override
@@ -232,6 +234,17 @@ class _SessionStartListenerState extends State<_SessionStartListener> {
 
   void _refreshUserScopedData(BuildContext context) {
     context.read<HomeCubit>().loadHomeData(silentRefresh: true);
+    // Kitap kartlarındaki kalpler bu listeden okunur; Favoriler sekmesi
+    // açılmayı beklerse kalpler boş görünür.
+    context.read<FavoriteCubit>().getFavoriteBooks();
+  }
+
+  /// Uygulama girişli açıldıysa favorileri baştan yükler.
+  Future<void> _loadFavoritesIfLoggedIn() async {
+    final token = await di<DioClient>().getToken();
+    if (!mounted || token == null || token.isEmpty) return;
+    final favorites = context.read<FavoriteCubit>();
+    if (favorites.state is FavoriteInitial) favorites.getFavoriteBooks();
   }
 
   @override
