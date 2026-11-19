@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,7 +58,8 @@ class _OrderDetailView extends StatelessWidget {
         context.l10n.orderCancelledSuccess,
       );
     } else {
-      NotificationHelper.showError(context, _cancelErrorMessage(context, result));
+      NotificationHelper.showError(
+          context, _cancelErrorMessage(context, result));
     }
   }
 
@@ -295,9 +297,8 @@ class _DetailError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final message = statusCode == 404
-        ? context.l10n.orderNotFound
-        : context.l10n.errorMessage;
+    if (statusCode != 404) return ErrorRetryView(onRetry: onRetry);
+    final message = context.l10n.orderNotFound;
     return Center(
       child: Padding(
         padding: EdgeInsets.all(24.w),
@@ -466,9 +467,8 @@ class _OrderItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final book = item.book;
-    final imagePath = book != null && book.images.isNotEmpty
-        ? book.images.first.path
-        : null;
+    final imagePath =
+        book != null && book.images.isNotEmpty ? book.images.first.path : null;
 
     // Sepet kartıyla aynı düzen: solda kare görsel, sağda ad / yazar / fiyat.
     return _CardShell(
@@ -736,8 +736,7 @@ class _StatusTimeline extends StatelessWidget {
                             color: Colors.grey[600],
                           ),
                         ),
-                        if (entry.note != null &&
-                            entry.note!.isNotEmpty) ...[
+                        if (entry.note != null && entry.note!.isNotEmpty) ...[
                           SizedBox(height: 4.h),
                           Text(
                             entry.note!,

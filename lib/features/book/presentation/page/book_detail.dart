@@ -2,6 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -380,6 +381,23 @@ class _BookDetailState extends State<BookDetail> {
                   ),
                 ],
               );
+            } else if (state is BookDetailError) {
+              // Bu durumda SliverAppBar yok; geri dönebilmek için geri düğmesi.
+              return SafeArea(
+                child: Column(
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: BackButton(),
+                    ),
+                    Expanded(
+                      child: ErrorRetryView(
+                        onRetry: () => _loadBook(widget.id),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
             return SizedBox.shrink();
           },
@@ -614,33 +632,9 @@ class _BookDetailState extends State<BookDetail> {
                   )
                 : SizedBox.shrink()
           else if (commentState is CommentError)
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.h),
-              decoration: BoxDecoration(
-                color: Colors.red[50],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red[200]!),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    color: Colors.red[600],
-                    size: 24.sp,
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    context.l10n.commentsError,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: 'Poppins-regular',
-                      color: Colors.red[700],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+            InlineErrorBanner(
+              margin: EdgeInsets.zero,
+              onRetry: () => _commentCubit.getCommentsByBookId(widget.id),
             ),
           SizedBox(height: 5.h),
           CustomButton(

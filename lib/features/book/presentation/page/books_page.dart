@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
@@ -162,108 +163,108 @@ class _BooksPageState extends State<BooksPage> {
     return BlocProvider.value(
       value: _booksCubit,
       child: Scaffold(
-      appBar: AppBar(
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(50.h),
-        //   child: Padding(
-        //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: [
-        //         Expanded(
-        //           child: Card(
-        //             color: CustomColors.orangeColor,
-        //             margin: EdgeInsets.zero,
-        //             shape: RoundedRectangleBorder(
-        //               borderRadius: BorderRadius.circular(5.r),
-        //             ),
-        //             child: Padding(
-        //               padding:
-        //                   EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-        //               child: Center(
-        //                 child: Text(
-        //                   'Süzgüç',
-        //                   style: TextStyle(
-        //                     fontFamily: 'Poppins-regular',
-        //                     fontSize: 14.sp,
-        //                     color: Colors.white,
-        //                   ),
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //         SizedBox(width: 10.w),
-        //         Expanded(
-        //           child: Card(
-        //             color: CustomColors.orangeColor,
-        //             margin: EdgeInsets.zero,
-        //             shape: RoundedRectangleBorder(
-        //               borderRadius: BorderRadius.circular(5.r),
-        //             ),
-        //             child: Padding(
-        //               padding:
-        //                   EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-        //               child: Center(
-        //                 child: Text(
-        //                   'Filter',
-        //                   style: TextStyle(
-        //                       fontFamily: 'Poppins-regular',
-        //                       fontSize: 14.sp,
-        //                       color: Colors.white),
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        title: Text(widget.name),
-        actions: [
-          IconButton(
-            onPressed: _openFilterPage,
-            icon: Icon(Icons.filter_list),
-          ),
-        ],
-      ),
-      body: BlocBuilder<BooksCubit, BookState>(
-        builder: (context, state) {
-          if (state is BooksLoading) {
-            return _buildShimmerLoading();
-          }
-
-          if (state is BooksLoadingMore) {
-            return _buildBooksGrid(state.currentBooks, showLoader: true);
-          }
-
-          if (state is BooksLoaded) {
-            final books = state.books;
-            if (books.isEmpty) {
-              return _buildEmptyMessage(context.l10n.emptyCategory);
+        appBar: AppBar(
+          // bottom: PreferredSize(
+          //   preferredSize: Size.fromHeight(50.h),
+          //   child: Padding(
+          //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         Expanded(
+          //           child: Card(
+          //             color: CustomColors.orangeColor,
+          //             margin: EdgeInsets.zero,
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(5.r),
+          //             ),
+          //             child: Padding(
+          //               padding:
+          //                   EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+          //               child: Center(
+          //                 child: Text(
+          //                   'Süzgüç',
+          //                   style: TextStyle(
+          //                     fontFamily: 'Poppins-regular',
+          //                     fontSize: 14.sp,
+          //                     color: Colors.white,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         SizedBox(width: 10.w),
+          //         Expanded(
+          //           child: Card(
+          //             color: CustomColors.orangeColor,
+          //             margin: EdgeInsets.zero,
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(5.r),
+          //             ),
+          //             child: Padding(
+          //               padding:
+          //                   EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+          //               child: Center(
+          //                 child: Text(
+          //                   'Filter',
+          //                   style: TextStyle(
+          //                       fontFamily: 'Poppins-regular',
+          //                       fontSize: 14.sp,
+          //                       color: Colors.white),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          title: Text(widget.name),
+          actions: [
+            IconButton(
+              onPressed: _openFilterPage,
+              icon: Icon(Icons.filter_list),
+            ),
+          ],
+        ),
+        body: BlocBuilder<BooksCubit, BookState>(
+          builder: (context, state) {
+            if (state is BooksLoading) {
+              return _buildShimmerLoading();
             }
-            if (_usesPagination() &&
-                books.length < 10 &&
-                state.hasMore &&
-                !_autoLoadMoreTriggered) {
-              _autoLoadMoreTriggered = true;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!mounted) return;
-                _loadMore();
-              });
+
+            if (state is BooksLoadingMore) {
+              return _buildBooksGrid(state.currentBooks, showLoader: true);
             }
-            return _buildBooksGrid(books);
-          }
 
-          if (state is BookError) {
-            return _buildEmptyMessage(context.l10n.errorMessage);
-          }
+            if (state is BooksLoaded) {
+              final books = state.books;
+              if (books.isEmpty) {
+                return _buildEmptyMessage(context.l10n.emptyCategory);
+              }
+              if (_usesPagination() &&
+                  books.length < 10 &&
+                  state.hasMore &&
+                  !_autoLoadMoreTriggered) {
+                _autoLoadMoreTriggered = true;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  _loadMore();
+                });
+              }
+              return _buildBooksGrid(books);
+            }
 
-          return _buildEmptyMessage(context.l10n.emptyCategory);
-        },
+            if (state is BookError) {
+              return ErrorRetryView(onRetry: _fetchBooks);
+            }
+
+            return _buildEmptyMessage(context.l10n.emptyCategory);
+          },
+        ),
       ),
-    ),
     );
   }
 

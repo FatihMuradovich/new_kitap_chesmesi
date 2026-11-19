@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -109,7 +110,7 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
                 children: [
                   // Privacy Policy Content
                   Html(
-                    data: _processNestedLists(state.pageModel.privacyPolicy), 
+                    data: _processNestedLists(state.pageModel.privacyPolicy),
                     style: {
                       "body": Style(
                           fontSize: FontSize(12.sp),
@@ -157,79 +158,11 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
               ),
             );
           } else if (state is PageError) {
-            return Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(20.w),
-                      decoration: BoxDecoration(
-                        color: Colors.red[50],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.error_outline,
-                        size: 64.sp,
-                        color: Colors.red[400],
-                      ),
-                    ),
-                    SizedBox(height: 24.h),
-                    Text(
-                      context.l10n.errorMessage,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontFamily: 'Poppins-regular',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      'Sahypa ýüklenende ýalňyşlyk ýüze çykdy',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontFamily: 'Poppins-regular',
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(height: 24.h),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        final localeCode =
-                            Localizations.localeOf(context).languageCode;
-                        context
-                            .read<PageCubit>()
-                            .fetchPageContent(force: true, localeCode: localeCode);
-                      },
-                      icon: Icon(Icons.refresh, size: 20.sp),
-                      label: Text(
-                        context.l10n.tryAgain,
-                        style: TextStyle(
-                          fontFamily: 'Poppins-regular',
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: CustomColors.orangeColor,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 32.w,
-                          vertical: 12.h,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        elevation: 2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            return ErrorRetryView(
+              onRetry: () => context.read<PageCubit>().fetchPageContent(
+                    force: true,
+                    localeCode: Localizations.localeOf(context).languageCode,
+                  ),
             );
           }
           return const SizedBox.shrink();

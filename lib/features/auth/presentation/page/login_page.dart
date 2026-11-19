@@ -44,8 +44,14 @@ class _LoginPageState extends State<LoginPage> {
           if (state is LoginSuccess) {
             di<AppRouter>().replaceAll([const CustomNavBarRoute()]);
           } else if (state is LoginError) {
+            final message = switch (state.reason) {
+              LoginErrorReason.invalidCredentials =>
+                context.l10n.invalidCredentials,
+              LoginErrorReason.connection => context.l10n.noInternetMessage,
+              LoginErrorReason.unknown => context.l10n.errorMessage,
+            };
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(content: Text(message)),
             );
           }
         },

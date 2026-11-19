@@ -6,6 +6,7 @@ import 'package:new_kitap_chesmesi/features/auth/domain/model/login_model.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/repository/login_repository.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_state.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
+import 'package:new_kitap_chesmesi/common/utils/network_error.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
 import 'package:new_kitap_chesmesi/core/service/notification_token_data_source.dart';
 import 'package:new_kitap_chesmesi/core/service/service.dart';
@@ -41,17 +42,24 @@ class LoginCubit extends Cubit<LoginState> {
           }
         } catch (e) {
           // Don't fail login if FCM token registration fails
-          log('Failed to register FCM token after login: $e', name: 'Login Error');
+          log('Failed to register FCM token after login: $e',
+              name: 'Login Error');
         }
       }
       emit(LoginSuccess(registerModel: result));
     } catch (e) {
-      // Extract clean error message
-      String errorMessage = e.toString();
-      if (errorMessage.startsWith('Exception: ')) {
-        errorMessage = errorMessage.substring('Exception: '.length);
-      }
-      emit(LoginError(message: errorMessage));
+      log('Login failed: $e', name: 'Login');
+      emit(LoginError(reason: _reasonFor(e)));
     }
+  }
+
+  LoginErrorReason _reasonFor(Object error) {
+    if (isConnectionError(error)) return LoginErrorReason.connection;
+    final status = statusCodeOf(error);
+    // 4xx: sunucu bilgileri reddetti. 2xx: yanıt geldi ama success=false.
+    if (status != null && status >= 200 && status < 500) {
+      return LoginErrorReason.invalidCredentials;
+    }
+    return LoginErrorReason.unknown;
   }
 }

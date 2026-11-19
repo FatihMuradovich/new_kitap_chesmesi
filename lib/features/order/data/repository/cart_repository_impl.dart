@@ -14,7 +14,7 @@ class CartRepositoryImpl implements CartRepository {
     try {
       return await cartDataSource.getCartItems();
     } catch (e) {
-      throw Exception('Repository: Sepet öğeleri getirilemedi - $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -23,7 +23,7 @@ class CartRepositoryImpl implements CartRepository {
     try {
       await cartDataSource.addToCart(bookId, quantity);
     } catch (e) {
-      throw Exception('Repository: Ürün sepete eklenemedi - $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -32,7 +32,7 @@ class CartRepositoryImpl implements CartRepository {
     try {
       await cartDataSource.updateCartQuantityByBookId(bookId, quantity);
     } catch (e) {
-      throw Exception('Repository: Sepet miktarı güncellenemedi - $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -41,7 +41,7 @@ class CartRepositoryImpl implements CartRepository {
     try {
       await cartDataSource.removeFromCartByBookId(bookId);
     } catch (e) {
-      throw Exception('Repository: Ürün sepetten çıkarılamadı - $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -50,7 +50,7 @@ class CartRepositoryImpl implements CartRepository {
     try {
       await cartDataSource.clearCart();
     } catch (e) {
-      throw Exception('Repository: Sepet temizlenemedi - $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 }

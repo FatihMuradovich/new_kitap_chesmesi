@@ -34,18 +34,35 @@ class CartLoaded extends CartState {
     return CartLoaded(
       cartItems: cartItems ?? this.cartItems,
       totalAmount: totalAmount ?? this.totalAmount,
-      updatingItemId: clearUpdatingItemId ? null : (updatingItemId ?? this.updatingItemId),
+      updatingItemId:
+          clearUpdatingItemId ? null : (updatingItemId ?? this.updatingItemId),
     );
   }
 }
 
-class CartError extends CartState {
-  final String message;
+/// Hata metni UI'da kullanıcının diline göre seçilir; cubit yalnızca nedeni bilir.
+enum CartFailureReason { stockLimit, connection, unknown }
 
-  const CartError({required this.message});
+/// Sepet hiç yüklenemedi — tam ekran hata ve "tekrar dene".
+class CartError extends CartState {
+  final CartFailureReason reason;
+
+  const CartError({required this.reason});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [reason];
+}
+
+/// Bir sepet işlemi (ekle/sil/adet) başarısız oldu. Tek seferlik bildirim:
+/// hemen ardından son yüklenen sepet yeniden yayınlanır, ürünler ekranda kalır.
+class CartActionError extends CartState {
+  final CartFailureReason reason;
+  final int? maxStock;
+
+  const CartActionError({required this.reason, this.maxStock});
+
+  @override
+  List<Object?> get props => [reason, maxStock];
 }
 
 class CartItemAdding extends CartState {}

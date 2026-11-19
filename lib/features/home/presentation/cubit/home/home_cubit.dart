@@ -23,12 +23,30 @@ class HomeCubit extends Cubit<HomeState> {
     final fNewBooks = safeLoadList(() => homeRepository.getRecentBooks());
     final fDiscountBooks =
         safeLoadList(() => homeRepository.getDiscountedBooks());
-    final fBooksByLang =
-        safeLoadList(() => homeRepository.fetchBooksByLang(4));
+    final fBooksByLang = safeLoadList(() => homeRepository.fetchBooksByLang(4));
     final fBookByCategoryId =
         safeLoadList(() => homeRepository.getBookByCategoryId(6));
     final fBookByCategoryIdLiterature =
         safeLoadList(() => homeRepository.getBookByCategoryId(1));
+
+    final results = <LoadResult<List<Object>>>[
+      await fBanners,
+      await fUserBooks,
+      await fNewBooks,
+      await fDiscountBooks,
+      await fBooksByLang,
+      await fBookByCategoryId,
+      await fBookByCategoryIdLiterature,
+    ];
+
+    // Hepsi başarısızsa (internet yok, sunucu/sertifika sorunu) boş sayfa
+    // yerine hata + "tekrar dene" göster. Sessiz yenilemede eldeki veriyi koru.
+    if (results.every((r) => r is LoadFailure)) {
+      if (!(silentRefresh && state is HomeLoaded)) {
+        emit(HomeError('all_requests_failed'));
+      }
+      return;
+    }
 
     final banners = (await fBanners).valueOrEmpty;
     final userBooks = (await fUserBooks).valueOrEmpty;

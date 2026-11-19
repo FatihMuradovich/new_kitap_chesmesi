@@ -24,19 +24,22 @@ class LoginSuccess extends LoginState {
   LoginSuccess({
     required this.registerModel,
   });
-  
+
   @override
   String toString() => 'LoginSuccess(registerModel: $registerModel)';
 }
 
+/// Hata metni UI'da kullanıcının diline göre seçilir; cubit yalnızca nedeni bilir.
+enum LoginErrorReason { invalidCredentials, connection, unknown }
+
 class LoginError extends LoginState {
-  final String message;
+  final LoginErrorReason reason;
 
-  const LoginError({required this.message});
+  const LoginError({required this.reason});
 
   @override
-  List<Object> get props => [message];
-  
+  List<Object> get props => [reason];
+
   @override
-  String toString() => 'LoginError(message: $message)';
+  String toString() => 'LoginError(reason: $reason)';
 }

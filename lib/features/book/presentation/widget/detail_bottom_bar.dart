@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cart_error_message.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
@@ -26,12 +27,10 @@ class DetailBottomBar extends StatelessWidget {
             context,
             context.l10n.productAddedToCart,
           );
-        } else if (state is CartError) {
+        } else if (state is CartActionError) {
           NotificationHelper.showError(
             context,
-            state.message.contains('Stokta') || state.message.contains('stok')
-                ? state.message
-                : context.l10n.errorMessage,
+            cartErrorMessage(context, state.reason, maxStock: state.maxStock),
           );
         }
       },
@@ -111,19 +110,10 @@ class DetailBottomBar extends StatelessWidget {
                   builder: (context, state) {
                     final isLoading = state is CartItemAdding;
 
-                    // Sepetteki mevcut miktarı bul
-                    int currentQuantityInCart = 0;
-                    if (state is CartLoaded) {
-                      try {
-                        final cartItem = state.cartItems.firstWhere(
-                          (item) => item.id == book.id,
-                        );
-                        currentQuantityInCart = cartItem.quantity;
-                      } catch (e) {
-                        // Sepette bu kitap yok
-                        currentQuantityInCart = 0;
-                      }
-                    }
+                    // Sepetteki mevcut miktar: ara durumlarda (ekleniyor,
+                    // hata) da son bilinen sepetten okunur, 0'a düşmez.
+                    final currentQuantityInCart =
+                        context.read<CartCubit>().quantityInCart(book.id);
 
                     // Stok kontrolü
                     final canAddToCart =

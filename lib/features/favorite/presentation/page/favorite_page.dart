@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_cubit.dart';
@@ -27,7 +28,8 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _syncGuestAndFavorites());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _syncGuestAndFavorites());
   }
 
   Future<void> _syncGuestAndFavorites() async {
@@ -66,78 +68,79 @@ class _FavoritePageState extends State<FavoritePage> {
         ),
       ],
       child: Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.favorites),
-      ),
-      body: _isGuest
-          ? const GuestAuthPrompt()
-          : BlocBuilder<FavoriteCubit, FavoriteState>(
-        builder: (context, state) {
-          if (state is FavoriteLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: CustomColors.orangeColor,
-              ),
-            );
-          } else if (state is FavoriteLoaded) {
-            final favoriteBooks = state.favorites;
-            if (favoriteBooks.isNotEmpty) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisExtent: 235.w,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemCount: favoriteBooks.length,
-                    itemBuilder: (context, index) {
-                      final favorite = favoriteBooks[index];
-                      return BookItem(margin: false, book: favorite);
-                    }),
-              );
-            } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(32.w),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.favorite_border_outlined,
-                        size: 64.sp,
+        appBar: AppBar(
+          title: Text(context.l10n.favorites),
+        ),
+        body: _isGuest
+            ? const GuestAuthPrompt()
+            : BlocBuilder<FavoriteCubit, FavoriteState>(
+                builder: (context, state) {
+                  if (state is FavoriteLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(
                         color: CustomColors.orangeColor,
                       ),
-                    ),
-                         SizedBox(height: 10.h),
-                    Text(
-                      context.l10n.favoriteIsEmpty,
-                      style: TextStyle(
-                        fontFamily: 'Poppins-regular',
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-          } else if (state is FavoriteError) {
-            return Center(
-              child: Text(context.l10n.errorMessage),
-            );
-          }
-          return SizedBox.shrink();
-        },
+                    );
+                  } else if (state is FavoriteLoaded) {
+                    final favoriteBooks = state.favorites;
+                    if (favoriteBooks.isNotEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisExtent: 235.w,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                            ),
+                            itemCount: favoriteBooks.length,
+                            itemBuilder: (context, index) {
+                              final favorite = favoriteBooks[index];
+                              return BookItem(margin: false, book: favorite);
+                            }),
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(32.w),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.favorite_border_outlined,
+                                size: 64.sp,
+                                color: CustomColors.orangeColor,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Text(
+                              context.l10n.favoriteIsEmpty,
+                              style: TextStyle(
+                                fontFamily: 'Poppins-regular',
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  } else if (state is FavoriteError) {
+                    return ErrorRetryView(
+                      onRetry: () =>
+                          context.read<FavoriteCubit>().getFavoriteBooks(),
+                    );
+                  }
+                  return SizedBox.shrink();
+                },
+              ),
       ),
-    ),
     );
   }
-
 }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:new_kitap_chesmesi/app/app.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
@@ -26,7 +27,8 @@ class LoginDataSource {
     }
   }
 
-  Future<RegisterModel> login(LoginModel loginModel, BuildContext context) async {
+  Future<RegisterModel> login(
+      LoginModel loginModel, BuildContext context) async {
     try {
       final langCode = getCurrentLanguageCode(context);
       final response = await dioSetting.dio.post(
@@ -37,12 +39,18 @@ class LoginDataSource {
         // final getResponse = (response.data);
         // return getResponse;
         return RegisterModel.fromMap(response.data['data']);
-      } else {
-        throw Exception('Telefon belgiňiz ýa-da parolyňyz nädogry');
       }
+      // Yanıt geldi ama giriş kabul edilmedi.
+      throw DioException.badResponse(
+        statusCode: response.statusCode ?? 0,
+        requestOptions: response.requestOptions,
+        response: response,
+      );
     } catch (e) {
+      // Orijinal hatayı koru: LoginCubit bağlantı hatasını yanlış şifreden
+      // ayırt edebilsin.
       debugPrint(e.toString());
-      throw Exception('Telefon belgiňiz ýa-da parolyňyz nädogry');
+      rethrow;
     }
   }
 }

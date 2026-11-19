@@ -593,6 +593,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get december => 'December';
 
   @override
+  String get invalidCredentials => 'Incorrect phone number or password';
+
+  @override
+  String stockLimit(int count) {
+    return 'Not enough stock. You can add at most $count.';
+  }
+
+  @override
   String get errorMessage => 'An error occurred!';
 
   @override

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
@@ -164,42 +165,10 @@ class _EtrapPageState extends State<EtrapPage> {
               },
             );
           } else if (state is WelayatAndEtrapError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    context.l10n.errorMessage,
-                    style: TextStyle(
-                      fontFamily: 'Poppins-regular',
-                      fontSize: 14.sp,
-                      color: Colors.red,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {
-                      context
-                          .read<WelayatAndEtrapCubit>()
-                          .getEtrapsByWelayatId(widget.welayatId);
-                    },
-                    child: Text(
-                      context.l10n.tryAgain,
-                      style: TextStyle(
-                        fontFamily: 'Poppins-regular',
-                        fontSize: 14.sp,
-                        color: CustomColors.orangeColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            return ErrorRetryView(
+              onRetry: () => context
+                  .read<WelayatAndEtrapCubit>()
+                  .getEtrapsByWelayatId(widget.welayatId),
             );
           }
           return SizedBox.shrink();

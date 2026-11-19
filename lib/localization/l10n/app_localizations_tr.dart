@@ -591,6 +591,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get december => 'Dekabr';
 
   @override
+  String get invalidCredentials => 'Telefon belgiňiz ýa-da parolyňyz nädogry';
+
+  @override
+  String stockLimit(int count) {
+    return 'Ammarda ýeterlik haryt ýok. Iň köp $count sany goşup bilersiňiz.';
+  }
+
+  @override
   String get errorMessage => 'Näsazlyk ýüze çykdy!';
 
   @override

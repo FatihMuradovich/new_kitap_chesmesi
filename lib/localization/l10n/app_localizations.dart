@@ -1234,6 +1234,18 @@ abstract class AppLocalizations {
   /// **'December'**
   String get december;
 
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect phone number or password'**
+  String get invalidCredentials;
+
+  /// No description provided for @stockLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough stock. You can add at most {count}.'**
+  String stockLimit(int count);
+
   /// No description provided for @errorMessage.
   ///
   /// In en, this message translates to:

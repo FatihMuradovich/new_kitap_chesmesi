@@ -8,6 +8,7 @@ import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
 import 'package:new_kitap_chesmesi/core/session/end_user_session.dart';
+import 'package:new_kitap_chesmesi/core/session/retry_failed_loads.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/forgot/forgot_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_state.dart';
@@ -180,6 +181,7 @@ class _AppState extends State<App> {
 ///   `HomeCubit` uygulama boyunca yaşar ve ana sayfa yalnızca veri yoksa
 ///   yükler; bu olmadan misafirin (veya önceki kullanıcının) "önerilen
 ///   kitaplar" listesi yeni oturumda da görünmeye devam ederdi.
+/// - Bağlantı geri gelince hata durumunda kalmış sekmeleri yeniden yükler.
 /// - Sunucu oturumu reddederse (refresh token geçersiz) kullanıcıyı misafir
 ///   durumuna alır ve bilgilendirir; aksi halde ekranda eski kullanıcının
 ///   verileri kalır ama her işlem başarısız olurdu.
@@ -194,17 +196,25 @@ class _SessionStartListener extends StatefulWidget {
 
 class _SessionStartListenerState extends State<_SessionStartListener> {
   StreamSubscription<void>? _sessionExpiredSub;
+  StreamSubscription<void>? _connectionRestoredSub;
 
   @override
   void initState() {
     super.initState();
     _sessionExpiredSub =
         di<DioClient>().onSessionExpired.listen((_) => _onSessionExpired());
+    // Bir sayfada "tekrar dene" başarılı olunca diğer sekmeler de yenilensin.
+    _connectionRestoredSub = di<DioClient>()
+        .onConnectionRestored
+        .listen((_) {
+      if (mounted) retryFailedLoads(context);
+    });
   }
 
   @override
   void dispose() {
     _sessionExpiredSub?.cancel();
+    _connectionRestoredSub?.cancel();
     super.dispose();
   }
 

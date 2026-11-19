@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/features/book/presentation/widget/book_item.dart';
@@ -161,7 +162,9 @@ class _SearchPageState extends State<SearchPage> {
                   }
                   return _buildSearchResults(state.books);
                 } else if (state is SearchError) {
-                  return _buildErrorState(state.message);
+                  return ErrorRetryView(
+                    onRetry: () => _performSearch(_searchController.text),
+                  );
                 }
                 return _buildEmptyState();
               },
@@ -281,74 +284,6 @@ class _SearchPageState extends State<SearchPage> {
         //   ),
         // ),
       ],
-    );
-  }
-
-  Widget _buildErrorState(String message) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(24.w),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.red[50],
-              ),
-              child: Icon(
-                Icons.error_outline,
-                size: 64.w,
-                color: Colors.red[300],
-              ),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              context.l10n.errorMessageSearch,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontFamily: 'Poppins-regular',
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontFamily: 'Poppins-regular',
-                color: Colors.grey[500],
-              ),
-            ),
-            SizedBox(height: 24.h),
-            ElevatedButton.icon(
-              onPressed: () => _performSearch(_searchController.text),
-              icon: Icon(Icons.refresh, size: 20.sp),
-              label: Text(
-                context.l10n.tryAgain,
-                style: TextStyle(
-                  fontFamily: 'Poppins-regular',
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomColors.orangeColor,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                elevation: 2,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

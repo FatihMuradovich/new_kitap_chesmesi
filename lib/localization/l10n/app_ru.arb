@@ -227,6 +227,8 @@
     "december": "Декабрь",
     "@_MESSAGES_ALERTS": "══════════════════════════════════════════════════════════",
     "@_MESSAGES_ALERTS_DESCRIPTION": "Mesajlar ve uyarılar",
+    "invalidCredentials": "Неверный номер телефона или пароль",
+    "stockLimit": "Недостаточно товара на складе. Можно добавить не более {count} шт.",
     "errorMessage": "Возникла проблема!",
     "notificationIsEmpty": "Нет уведомлений!",
     "notificationIsEmptyDescription": "Нет уведомлений для сейчас",

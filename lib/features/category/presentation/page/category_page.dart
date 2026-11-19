@@ -2,6 +2,7 @@ import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/customn_icons.dart';
@@ -41,18 +42,8 @@ class CategoryPage extends StatelessWidget {
               ),
             );
           } else if (state is CategoryError) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  context.l10n.errorMessage,
-                  style: TextStyle(
-                    fontFamily: 'Poppins-regular',
-                    fontSize: 18.sp,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+            return ErrorRetryView(
+              onRetry: () => context.read<CategoryCubit>().fetchCategories(),
             );
           }
           return SizedBox.shrink();

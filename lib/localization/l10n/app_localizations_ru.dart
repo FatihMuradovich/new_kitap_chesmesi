@@ -592,6 +592,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get december => 'Декабрь';
 
   @override
+  String get invalidCredentials => 'Неверный номер телефона или пароль';
+
+  @override
+  String stockLimit(int count) {
+    return 'Недостаточно товара на складе. Можно добавить не более $count шт.';
+  }
+
+  @override
   String get errorMessage => 'Возникла проблема!';
 
   @override

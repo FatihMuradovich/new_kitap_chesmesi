@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
+import 'package:new_kitap_chesmesi/features/order/presentation/cart_error_message.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
@@ -68,103 +70,114 @@ class _CartPageState extends State<CartPage> {
         ),
       ],
       child: BlocListener<CartCubit, CartState>(
-      listener: (context, state) {
-        if (state is CartError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(context.l10n.cart),
-          actions: [
-            BlocBuilder<CartCubit, CartState>(
-              builder: (context, state) {
-                if (!_isGuest &&
-                    state is CartLoaded &&
-                    state.cartItems.isNotEmpty) {
-                  return IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext dialogContext) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            backgroundColor: Colors.white,
-                            title: Text(
-                              context.l10n.confirm,
-                              style: TextStyle(
-                                fontFamily: 'Poppins-regular',
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
+        listener: (context, state) {
+          if (state is CartActionError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(cartErrorMessage(
+                  context,
+                  state.reason,
+                  maxStock: state.maxStock,
+                )),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(context.l10n.cart),
+            actions: [
+              BlocBuilder<CartCubit, CartState>(
+                builder: (context, state) {
+                  if (!_isGuest &&
+                      state is CartLoaded &&
+                      state.cartItems.isNotEmpty) {
+                    return IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
                               ),
-                            ),
-                            content: Text(
-                              context.l10n.confirmRemoveFromCart,
-                              style: TextStyle(
-                                fontFamily: 'Poppins-regular',
-                                fontSize: 14.sp,
-                                color: Colors.black,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(dialogContext).pop(),
-                                child: Text(
-                                  context.l10n.no,
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins-regular',
-                                    fontSize: 14.sp,
-                                    color: Colors.black,
-                                  ),
+                              backgroundColor: Colors.white,
+                              title: Text(
+                                context.l10n.confirm,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-regular',
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(dialogContext).pop();
-                                  context.read<CartCubit>().clearCart();
-                                },
-                                child: Text(
-                                  context.l10n.yes,
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins-regular',
-                                    fontSize: 14.sp,
-                                    color: CustomColors.orangeColor,
-                                  ),
+                              content: Text(
+                                context.l10n.confirmRemoveFromCart,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-regular',
+                                  fontSize: 14.sp,
+                                  color: Colors.black,
                                 ),
                               ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: Icon(
-                      Icons.delete,
-                      color: CustomColors.blueColor,
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(dialogContext).pop(),
+                                  child: Text(
+                                    context.l10n.no,
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins-regular',
+                                      fontSize: 14.sp,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(dialogContext).pop();
+                                    context.read<CartCubit>().clearCart();
+                                  },
+                                  child: Text(
+                                    context.l10n.yes,
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins-regular',
+                                      fontSize: 14.sp,
+                                      color: CustomColors.orangeColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: CustomColors.blueColor,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
+          body: _isGuest ? const GuestAuthPrompt() : _buildCartBody(context),
         ),
-        body: _isGuest ? const GuestAuthPrompt() : _buildCartBody(context),
       ),
-    ),
     );
   }
 
   Widget _buildCartBody(BuildContext context) {
     return BlocBuilder<CartCubit, CartState>(
+      // Ekleme/silme gibi ara durumlarda ve işlem hatalarında listeyi koru;
+      // aksi halde sepet bir anlığına boş ekrana dönerdi.
+      buildWhen: (_, current) =>
+          current is CartInitial ||
+          current is CartLoading ||
+          current is CartLoaded ||
+          current is CartError,
       builder: (context, state) {
         if (state is CartLoading) {
           return Center(
@@ -173,24 +186,9 @@ class _CartPageState extends State<CartPage> {
             ),
           );
         } else if (state is CartError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error,
-                  size: 64,
-                  color: Colors.red,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<CartCubit>().getCartItems();
-                  },
-                  child: Text(context.l10n.tryAgain),
-                ),
-              ],
-            ),
+          return ErrorRetryView(
+            message: cartErrorMessage(context, state.reason),
+            onRetry: () => context.read<CartCubit>().getCartItems(),
           );
         } else if (state is CartLoaded) {
           if (state.cartItems.isEmpty) {
@@ -236,8 +234,7 @@ class _CartPageState extends State<CartPage> {
                       return Dismissible(
                         key: ValueKey(cartItem.cartItemId),
                         background: Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -319,8 +316,7 @@ class _CartPageState extends State<CartPage> {
                       width: double.infinity,
                       child: CustomButton(
                         onTap: () async {
-                          final currentState =
-                              context.read<CartCubit>().state;
+                          final currentState = context.read<CartCubit>().state;
                           if (currentState is CartLoaded) {
                             final result = await di<AppRouter>().push<bool>(
                               OrderRoute(
@@ -358,5 +354,4 @@ class _CartPageState extends State<CartPage> {
       },
     );
   }
-
 }

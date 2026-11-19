@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
@@ -200,44 +201,7 @@ class _OrdersError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.wifi_off_rounded,
-              size: 40.sp,
-              color: Colors.grey[400],
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              context.l10n.errorMessage,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Poppins-regular',
-                fontSize: 14.sp,
-                color: Colors.grey[700],
-              ),
-            ),
-            SizedBox(height: 16.h),
-            TextButton(
-              onPressed: onRetry,
-              child: Text(
-                context.l10n.tryAgain,
-                style: TextStyle(
-                  fontFamily: 'Poppins-regular',
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: CustomColors.orangeColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return ErrorRetryView(onRetry: onRetry);
   }
 }
 

@@ -25,7 +25,7 @@ class CartDataSource {
         throw Exception('Sepet öğeleri getirilemedi: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Sepet API hatası: $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -43,7 +43,7 @@ class CartDataSource {
         throw Exception('Ürün sepete eklenemedi: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Sepete ekleme API hatası: $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -61,7 +61,7 @@ class CartDataSource {
         throw Exception('Sepet miktarı güncellenemedi: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Sepet miktar güncelleme API hatası: $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -73,7 +73,7 @@ class CartDataSource {
         throw Exception('Ürün sepetten çıkarılamadı: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Sepetten çıkarma API hatası: $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 
@@ -85,7 +85,7 @@ class CartDataSource {
         throw Exception('Sepet temizlenemedi: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Sepet temizleme API hatası: $e');
+      rethrow; // Orijinal hata korunur: CartCubit bağlantı hatasını ayırt eder.
     }
   }
 }

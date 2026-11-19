@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
@@ -130,7 +131,11 @@ class _NotificationPageState extends State<NotificationPage> {
                             ),
                           );
                         } else if (state is NotificationError) {
-                          return _buildErrorState(context, state.message);
+                          return ErrorRetryView(
+                            onRetry: () => context
+                                .read<NotificationCubit>()
+                                .fetchNotifications(),
+                          );
                         }
                         return const SizedBox.shrink();
                       },
@@ -181,79 +186,6 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState(BuildContext context, String message) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(24.w),
-              decoration: BoxDecoration(
-                color: Colors.red[50],
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.error_outline,
-                size: 64.sp,
-                color: Colors.red[400],
-              ),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              context.l10n.errorMessage,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Poppins-regular',
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700],
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Poppins-regular',
-                fontSize: 12.sp,
-                color: Colors.grey[500],
-              ),
-            ),
-            SizedBox(height: 24.h),
-            ElevatedButton.icon(
-              onPressed: () {
-                context.read<NotificationCubit>().fetchNotifications();
-              },
-              icon: Icon(Icons.refresh, size: 20.sp),
-              label: Text(
-                context.l10n.tryAgain,
-                style: TextStyle(
-                  fontFamily: 'Poppins-regular',
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomColors.orangeColor,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 32.w,
-                  vertical: 12.h,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                elevation: 2,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

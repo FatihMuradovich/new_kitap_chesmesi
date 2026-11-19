@@ -122,9 +122,10 @@ class HomeDataSource {
       // 200 dışındaki durumlarda da boş liste dön (home ekranı çökmesin)
       return [];
     } catch (e) {
-      // Backend şu an 500 dökse bile ana sayfanın tamamen çökmesini istemiyoruz.
-      // Bu durumda sadece önerilen kitaplar bölümünü gizlemek için boş liste döndürüyoruz.
-      return [];
+      // Hata yutulmaz: HomeCubit bölümü zaten tek başına gizler (safeLoadList).
+      // Burada boş liste dönmek "her şey başarısız" durumunu gizleyip ana
+      // sayfayı hata ekranı yerine boş bırakıyordu.
+      rethrow;
     }
   }
 }

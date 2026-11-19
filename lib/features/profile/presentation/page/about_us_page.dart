@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -149,32 +150,11 @@ class _AboutUsPageState extends State<AboutUsPage> {
               ),
             );
           } else if (state is PageError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64.sp,
-                    color: Colors.red,
+            return ErrorRetryView(
+              onRetry: () => context.read<PageCubit>().fetchPageContent(
+                    force: true,
+                    localeCode: Localizations.localeOf(context).languageCode,
                   ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    context.l10n.errorMessage,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<PageCubit>().fetchPageContent(force: true);
-                    },
-                    child: Text(context.l10n.tryAgain),
-                  ),
-                ],
-              ),
             );
           }
           return const SizedBox.shrink();

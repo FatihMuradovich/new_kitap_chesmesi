@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
@@ -257,20 +258,7 @@ class _BooksAuthorFilterPageState extends State<BooksAuthorFilterPage> {
     }
 
     if (_error != null && _authors.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Text(
-            _error!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Poppins-regular',
-              fontSize: 13.sp,
-              color: Colors.black54,
-            ),
-          ),
-        ),
-      );
+      return ErrorRetryView(onRetry: () => _loadAuthors(reset: true));
     }
 
     if (_authors.isEmpty) {

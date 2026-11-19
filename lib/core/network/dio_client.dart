@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:new_kitap_chesmesi/core/service/language_service.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
+import 'package:new_kitap_chesmesi/common/utils/network_error.dart';
 
 class DioClient {
   /// Refresh isteğinin kendisi 401 döndüğünde interceptor'ın tekrar refresh denemesini
@@ -62,8 +63,17 @@ class DioClient {
 
           return handler.next(options);
         },
-        onResponse: (response, handler) => handler.next(response),
+        onResponse: (response, handler) {
+          _markOnline();
+          return handler.next(response);
+        },
         onError: (DioException e, handler) async {
+          if (isConnectionError(e)) {
+            _offline = true;
+          } else if (e.response != null) {
+            // Sunucu yanıt verdi (4xx/5xx): bağlantı var.
+            _markOnline();
+          }
           final options = e.requestOptions;
           final shouldTryRefresh = e.response?.statusCode == 401 &&
               options.extra[kSkipTokenRefresh] != true &&
@@ -84,6 +94,20 @@ class DioClient {
         },
       ),
     ]);
+  }
+
+  final _connectionRestored = StreamController<void>.broadcast();
+  bool _offline = false;
+
+  /// Bağlantı hatası görüldükten sonra sunucudan ilk yanıt geldiğinde bir kez
+  /// tetiklenir. Hata durumunda kalmış diğer ekranlar bununla kendiliğinden
+  /// yenilenir; kullanıcı her sekmede ayrı ayrı "tekrar dene"ye basmaz.
+  Stream<void> get onConnectionRestored => _connectionRestored.stream;
+
+  void _markOnline() {
+    if (!_offline) return;
+    _offline = false;
+    _connectionRestored.add(null);
   }
 
   final _sessionExpired = StreamController<void>.broadcast();

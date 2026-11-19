@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
@@ -74,10 +75,10 @@ class _HomePageState extends State<HomePage>
                             onTap: () {
                               di<AppRouter>().push(
                                 BooksRoute(
-                                categoryType: BookCategoryType.recommended,
-                                name: context.l10n.recommendedBooks,
-                              ),
-                            );
+                                  categoryType: BookCategoryType.recommended,
+                                  name: context.l10n.recommendedBooks,
+                                ),
+                              );
                             },
                           )
                         : SizedBox.shrink(),
@@ -133,26 +134,23 @@ class _HomePageState extends State<HomePage>
                   ],
                 );
               } else if (state is HomeError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        context.l10n.errorMessage,
-                        style: TextStyle(
-                          fontFamily: 'Poppins-regular',
-                          fontSize: 16.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return _buildErrorState(context);
               }
               return SizedBox.shrink();
             },
           ),
         ),
+      ),
+    );
+  }
+
+  /// Hiçbir veri yüklenemediğinde (internet yok, sunucu erişilemez).
+  /// Kaydırarak yenileme de çalışır; düğme bunu bilmeyenler için.
+  Widget _buildErrorState(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.7,
+      child: ErrorRetryView(
+        onRetry: () => context.read<HomeCubit>().loadHomeData(),
       ),
     );
   }

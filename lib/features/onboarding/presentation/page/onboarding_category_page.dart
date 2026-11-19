@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/common/constants/custom_colors.dart';
@@ -83,26 +84,9 @@ class _OnboardingCategoryPageState extends State<OnboardingCategoryPage> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (state is CategoryError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              context.l10n.categoriesNotLoaded,
-                              style: TextStyle(
-                                fontFamily: 'Poppins-regular',
-                                fontSize: 14.sp,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            TextButton(
-                              onPressed: () => context
-                                  .read<CategoryCubit>()
-                                  .fetchCategories(),
-                              child: Text(context.l10n.tryAgain),
-                            ),
-                          ],
-                        ),
+                      return ErrorRetryView(
+                        onRetry: () =>
+                            context.read<CategoryCubit>().fetchCategories(),
                       );
                     } else if (state is CategoryLoaded) {
                       final categories = state.categories;

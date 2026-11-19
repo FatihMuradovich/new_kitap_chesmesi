@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/features/profile/presentation/cubit/coupon/coupon_cubit.dart';
@@ -103,44 +104,8 @@ class _CouponPageState extends State<CouponPage> {
                 },
               );
             } else if (state is CouponError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 65.sp,
-                      color: Colors.red[400],
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      context.l10n.couponError,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.red[600],
-                        fontFamily: 'Poppins-regular',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<CouponCubit>().loadUserCoupons();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: CustomColors.orangeColor,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: Text(
-                        context.l10n.tryAgain,
-                        style: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ],
-                ),
+              return ErrorRetryView(
+                onRetry: () => context.read<CouponCubit>().loadUserCoupons(),
               );
             }
 

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -204,7 +205,9 @@ class _AllCommentsPageState extends State<AllCommentsPage> {
               ],
             );
           } else if (state is CommentError) {
-            return _buildErrorState(state.message);
+            return ErrorRetryView(
+              onRetry: () => _commentCubit.getCommentsByBookId(widget.bookId),
+            );
           }
           return _buildEmptyState();
         },
@@ -305,67 +308,6 @@ class _AllCommentsPageState extends State<AllCommentsPage> {
               icon: Icon(Icons.add_comment, color: Colors.white),
               label: Text(
                 context.l10n.sendComment,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Poppins-regular',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorState(String message) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(32.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 80.sp,
-              color: Colors.red[400],
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              context.l10n.commentsError,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontFamily: 'Poppins-regular',
-                color: Colors.red[600],
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              message,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontFamily: 'Poppins-regular',
-                color: Colors.grey[600],
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 32.h),
-            ElevatedButton.icon(
-              onPressed: () {
-                _commentCubit.getCommentsByBookId(widget.bookId);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomColors.orangeColor,
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-              ),
-              icon: Icon(Icons.refresh, color: Colors.white),
-              label: Text(
-                context.l10n.tryAgain,
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Poppins-regular',

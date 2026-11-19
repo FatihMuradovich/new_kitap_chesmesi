@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
@@ -151,212 +152,244 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ],
       child: Scaffold(
-      appBar: AppBar(title: Text(context.l10n.profil)),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (_isGuest) const GuestAuthPrompt(),
-              if (!_isGuest)
-                BlocBuilder<UserCubit, UserState>(
-                  builder: (context, state) {
-                    if (state is UserLoading) {
-                      return Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: CircularProgressIndicator(
-                            color: CustomColors.orangeColor,
-                          ),
-                        ),
-                      );
-                    } else if (state is UserLoaded) {
-                      final user = state.user;
-                      return Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey[300]!),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              context.l10n.get_coupon,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: 'Poppins-regular',
-                              ),
+        appBar: AppBar(title: Text(context.l10n.profil)),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                if (_isGuest) const GuestAuthPrompt(),
+                if (!_isGuest)
+                  BlocBuilder<UserCubit, UserState>(
+                    builder: (context, state) {
+                      if (state is UserLoading) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: CircularProgressIndicator(
+                              color: CustomColors.orangeColor,
                             ),
-                            SizedBox(height: 12.h),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.grey[300]!),
+                          ),
+                        );
+                      } else if (state is UserLoaded) {
+                        final user = state.user;
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[300]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                context.l10n.get_coupon,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Poppins-regular',
+                                ),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: Text(
-                                    user.referral.toString(),
-                                    style: TextStyle(
-                                      color: CustomColors.orangeColor,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Poppins-black',
+                              SizedBox(height: 12.h),
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.grey[300]!),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      user.referral.toString(),
+                                      style: TextStyle(
+                                        color: CustomColors.orangeColor,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins-black',
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else if (state is UserError) {
-                      return Container(
-                        margin: const EdgeInsets.all(16.0),
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          color: Colors.red[50],
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.red[300]!),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.error_outline,
-                              color: Colors.red[600],
-                              size: 40,
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              context.l10n.errorMessage,
-                              style: TextStyle(
-                                color: Colors.red[700],
-                                fontSize: 14.sp,
-                                fontFamily: 'Poppins-regular',
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 12.h),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<UserCubit>().fetchUserProfile();
-                              },
-                              child: Text(context.l10n.tryAgain),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-              if (!_isGuest)
-                SizedBox(
-                  height: 10.h,
-                ),
-              if (!_isGuest)
-                ProfileItem(
-                  ontap: () async {
-                    final currentState = context.read<UserCubit>().state;
-                    if (currentState is UserLoaded) {
-                      final result = await di<AppRouter>().push(
-                        UserEditRoute(user: currentState.user),
-                      );
-                      if (result != null && context.mounted) {
-                        context.read<UserCubit>().fetchUserProfile();
+                            ],
+                          ),
+                        );
+                      } else if (state is UserError) {
+                        return InlineErrorBanner(
+                          onRetry: () =>
+                              context.read<UserCubit>().fetchUserProfile(),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
                       }
-                    }
-                  },
-                  icon: 'assets/icons/person_light.png',
-                  title: context.l10n.myProfile,
-                ),
-              if (!_isGuest)
-                ProfileItem(
-                  ontap: () {
-                    di<AppRouter>().push(const MyOrdersRoute());
-                  },
-                  icon: 'assets/icons/rule_light.png',
-                  title: context.l10n.myOrders,
-                ),
-              if (!_isGuest)
-                ProfileItem(
-                  ontap: () {
-                    di<AppRouter>().push(const CouponRoute());
-                  },
-                  icon: 'assets/icons/coupon_light.png',
-                  title: context.l10n.coupon,
-                ),
-              if (!_isGuest)
-                ProfileItem(
-                  ontap: () {
-                    di<AppRouter>().push(const ContactRoute());
-                  },
-                  icon: 'assets/icons/comment_light.png',
-                  title: context.l10n.contact,
-                ),
-              BlocBuilder<PageCubit, PageState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      ProfileItem(
-                        ontap: () {
-                          di<AppRouter>().push(const AboutUsRoute());
-                        },
-                        icon: 'assets/icons/info_light.png',
-                        title: context.l10n.aboutUs,
-                      ),
-                      ProfileItem(
-                        ontap: () {
-                          di<AppRouter>().push(const TermsOfUseRoute());
-                        },
-                        icon: 'assets/icons/rule_light.png',
-                        title: context.l10n.rules,
-                      ),
-                      ProfileItem(
-                        ontap: () {
-                          di<AppRouter>().push(const PrivacyPolicyRoute());
-                        },
-                        icon: 'assets/icons/insurance_light.png',
-                        title: context.l10n.privacy,
-                      ),
-                    ],
-                  );
-                },
-              ),
-              ProfileItem(
-                ontap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const LanguageDialog();
                     },
-                  );
-                },
-                icon: 'assets/icons/globe_light.png',
-                title: context.l10n.language,
-              ),
-              if (!_isGuest)
+                  ),
+                if (!_isGuest)
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                if (!_isGuest)
+                  ProfileItem(
+                    ontap: () async {
+                      final currentState = context.read<UserCubit>().state;
+                      if (currentState is UserLoaded) {
+                        final result = await di<AppRouter>().push(
+                          UserEditRoute(user: currentState.user),
+                        );
+                        if (result != null && context.mounted) {
+                          context.read<UserCubit>().fetchUserProfile();
+                        }
+                      }
+                    },
+                    icon: 'assets/icons/person_light.png',
+                    title: context.l10n.myProfile,
+                  ),
+                if (!_isGuest)
+                  ProfileItem(
+                    ontap: () {
+                      di<AppRouter>().push(const MyOrdersRoute());
+                    },
+                    icon: 'assets/icons/rule_light.png',
+                    title: context.l10n.myOrders,
+                  ),
+                if (!_isGuest)
+                  ProfileItem(
+                    ontap: () {
+                      di<AppRouter>().push(const CouponRoute());
+                    },
+                    icon: 'assets/icons/coupon_light.png',
+                    title: context.l10n.coupon,
+                  ),
+                if (!_isGuest)
+                  ProfileItem(
+                    ontap: () {
+                      di<AppRouter>().push(const ContactRoute());
+                    },
+                    icon: 'assets/icons/comment_light.png',
+                    title: context.l10n.contact,
+                  ),
+                BlocBuilder<PageCubit, PageState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        ProfileItem(
+                          ontap: () {
+                            di<AppRouter>().push(const AboutUsRoute());
+                          },
+                          icon: 'assets/icons/info_light.png',
+                          title: context.l10n.aboutUs,
+                        ),
+                        ProfileItem(
+                          ontap: () {
+                            di<AppRouter>().push(const TermsOfUseRoute());
+                          },
+                          icon: 'assets/icons/rule_light.png',
+                          title: context.l10n.rules,
+                        ),
+                        ProfileItem(
+                          ontap: () {
+                            di<AppRouter>().push(const PrivacyPolicyRoute());
+                          },
+                          icon: 'assets/icons/insurance_light.png',
+                          title: context.l10n.privacy,
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 ProfileItem(
                   ontap: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext dialogContext) {
-                        var alertDialog = AlertDialog(
+                      builder: (context) {
+                        return const LanguageDialog();
+                      },
+                    );
+                  },
+                  icon: 'assets/icons/globe_light.png',
+                  title: context.l10n.language,
+                ),
+                if (!_isGuest)
+                  ProfileItem(
+                    ontap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          var alertDialog = AlertDialog(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            title: Text(
+                              context.l10n.signOut,
+                              style: TextStyle(
+                                fontFamily: 'Poppins-regular',
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            content: Text(
+                              context.l10n.signOutDescription,
+                              style: TextStyle(
+                                fontFamily: 'Poppins-regular',
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(dialogContext).pop(),
+                                child: Text(
+                                  context.l10n.no,
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins-regular',
+                                    fontSize: 14.sp,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+                                  _clearStorageAndLogout();
+                                },
+                                child: Text(
+                                  context.l10n.yes,
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins-regular',
+                                    fontSize: 14.sp,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                          return alertDialog;
+                        },
+                      );
+                    },
+                    icon: 'assets/icons/sign_light.png',
+                    title: context.l10n.signOut,
+                  ),
+                if (!_isGuest)
+                  ProfileItem(
+                    icon: 'assets/icons/delete.png',
+                    title: context.l10n.deleteAccount,
+                    ontap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) => AlertDialog(
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           title: Text(
-                            context.l10n.signOut,
+                            context.l10n.deleteAccount,
                             style: TextStyle(
                               fontFamily: 'Poppins-regular',
                               fontSize: 16.sp,
@@ -364,7 +397,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           content: Text(
-                            context.l10n.signOutDescription,
+                            context.l10n.deleteAccountDescription,
                             style: TextStyle(
                               fontFamily: 'Poppins-regular',
                               fontSize: 14.sp,
@@ -386,7 +419,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(dialogContext).pop();
-                                _clearStorageAndLogout();
+                                _deleteAccountAndLogout();
                               },
                               child: Text(
                                 context.l10n.yes,
@@ -398,76 +431,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ],
-                        );
-                        return alertDialog;
-                      },
-                    );
-                  },
-                  icon: 'assets/icons/sign_light.png',
-                  title: context.l10n.signOut,
-                ),
-              if (!_isGuest)
-                ProfileItem(
-                  icon: 'assets/icons/delete.png',
-                  title: context.l10n.deleteAccount,
-                  ontap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) => AlertDialog(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
                         ),
-                        title: Text(
-                          context.l10n.deleteAccount,
-                          style: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        content: Text(
-                          context.l10n.deleteAccountDescription,
-                          style: TextStyle(
-                            fontFamily: 'Poppins-regular',
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(dialogContext).pop(),
-                            child: Text(
-                              context.l10n.no,
-                              style: TextStyle(
-                                fontFamily: 'Poppins-regular',
-                                fontSize: 14.sp,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                              _deleteAccountAndLogout();
-                            },
-                            child: Text(
-                              context.l10n.yes,
-                              style: TextStyle(
-                                fontFamily: 'Poppins-regular',
-                                fontSize: 14.sp,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-            ],
+                      );
+                    },
+                  ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

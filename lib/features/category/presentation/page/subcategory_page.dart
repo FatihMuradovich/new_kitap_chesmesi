@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:new_kitap_chesmesi/common/widgets/error_retry_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +13,6 @@ import 'package:new_kitap_chesmesi/features/book/presentation/page/books_page.da
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/cubit/subcategory_cubit.dart';
 import 'package:new_kitap_chesmesi/features/category/presentation/cubit/cubit/subcategory_state.dart';
 import 'package:new_kitap_chesmesi/common/widgets/category_shimmer.dart';
-import 'package:new_kitap_chesmesi/localization/localization.dart';
 
 @RoutePage()
 // ignore: must_be_immutable
@@ -91,18 +91,10 @@ class _SubcategoryPageState extends State<SubcategoryPage> {
               ),
             );
           } else if (state is SubcategoryError) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  context.l10n.errorMessage,
-                  style: TextStyle(
-                    fontFamily: 'Poppins-regular',
-                    fontSize: 18.sp,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+            return ErrorRetryView(
+              onRetry: () => context
+                  .read<SubcategoryCubit>()
+                  .fetchSubCategories(widget.id),
             );
           }
           return SizedBox.shrink();
