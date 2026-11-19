@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
 import 'package:new_kitap_chesmesi/core/config/api_config.dart';
@@ -166,15 +167,16 @@ initLocatorService() async {
 }
 
 registerTalker() {
-  final talker = TalkerFlutter.init();
+  // Release'te kapalı: loglar token, telefon numarası gibi verileri içerebilir.
+  final talker = TalkerFlutter.init(
+    settings: TalkerSettings(enabled: kDebugMode),
+  );
 
   di.registerLazySingleton(() => talker);
 }
 
 registerDio() async {
-  di.registerLazySingleton(() => Dio(BaseOptions(
-        baseUrl: ApiConfig.apiBaseUrl,
-      )));
+  di.registerLazySingleton(() => Dio(ApiConfig.dioOptions()));
   di.registerLazySingleton(
     () =>
         DioClient(di<FlutterSecureStorage>(), di<Dio>(), di<TalkerDioLogger>()),

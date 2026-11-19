@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:new_kitap_chesmesi/core/service/fcm_background_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +23,12 @@ void main() async {
   await initLocatorService();
   await di<LanguageService>().load();
 
-  Bloc.observer = TalkerBlocObserver(talker: di<Talker>());
+  if (kDebugMode) {
+    Bloc.observer = TalkerBlocObserver(talker: di<Talker>());
+  } else {
+    // Release'te debugPrint logcat'e yazar; kullanıcı verisi sızmasın.
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
   
   // FCM token setup
   _setupFCMToken();

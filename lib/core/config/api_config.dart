@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 /// Sunucu adresleri tek yerden okunur — hem Dio `baseUrl` hem statik dosya kökü
 /// buradan türer, böylece dev/prod arasında tek satır değiştirmek yeterli.
 ///
@@ -15,4 +17,17 @@ class ApiConfig {
 
   /// Dio `baseUrl` — dil öneki interceptor tarafından eklenir (`.../api/tm/...`).
   static const String apiBaseUrl = '$host/api/';
+
+  /// Sunucuya bağlantı kurma süresi. Zayıf mobil ağda bile bu sürede
+  /// bağlanamıyorsak kullanıcıya hata gösterip tekrar denetmek daha iyi.
+  static const Duration connectTimeout = Duration(seconds: 15);
+
+  /// Yanıtın gelme süresi (büyük listeler için daha uzun).
+  static const Duration receiveTimeout = Duration(seconds: 30);
+
+  static BaseOptions dioOptions() => BaseOptions(
+        baseUrl: apiBaseUrl,
+        connectTimeout: connectTimeout,
+        receiveTimeout: receiveTimeout,
+      );
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:new_kitap_chesmesi/core/service/language_service.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
@@ -17,13 +18,16 @@ class DioClient {
   final Dio _dio;
   final LanguageService _languageService = di<LanguageService>();
 
+  /// [enableLogging] varsayılan olarak yalnızca debug'da açıktır: ağ logları
+  /// Authorization başlığı, telefon numarası ve şifre içerebilir.
   DioClient(
     this.secureStorage,
     this._dio,
-    this.talkerDioLogger,
-  ) {
+    this.talkerDioLogger, {
+    bool enableLogging = kDebugMode,
+  }) {
     _dio.interceptors.addAll([
-      talkerDioLogger,
+      if (enableLogging) talkerDioLogger,
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final skipRefreshFlow = options.extra[kSkipTokenRefresh] == true;
