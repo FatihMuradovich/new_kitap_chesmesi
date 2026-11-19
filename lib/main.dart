@@ -9,6 +9,7 @@ import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/core/service/service.dart';
 import 'package:new_kitap_chesmesi/core/service/notification_token_data_source.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
+import 'package:new_kitap_chesmesi/core/service/language_service.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 
@@ -19,6 +20,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await Firebase.initializeApp();
   await initLocatorService();
+  await di<LanguageService>().load();
 
   Bloc.observer = TalkerBlocObserver(talker: di<Talker>());
   

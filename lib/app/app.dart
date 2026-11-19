@@ -48,7 +48,8 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  Locale locale = const Locale('tr');
+  // main() içinde kayıtlı dil yüklendi.
+  Locale locale = di<LanguageService>().locale;
 
   void setLocale(Locale newLocal) {
     setState(() {
