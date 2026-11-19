@@ -234,6 +234,8 @@
             "count": {"type": "int"}
         }
     },
+    "phoneAlreadyRegistered": "This phone number is already registered. Please sign in.",
+    "tooManyRequests": "Too many attempts. Please wait a moment and try again.",
     "errorMessage": "An error occurred!",
     "notificationIsEmpty": "No notifications!",
     "notificationIsEmptyDescription": "No notifications for now",

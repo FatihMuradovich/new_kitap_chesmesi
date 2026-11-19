@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/model/register_model.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState();
@@ -29,11 +30,8 @@ class LoginSuccess extends LoginState {
   String toString() => 'LoginSuccess(registerModel: $registerModel)';
 }
 
-/// Hata metni UI'da kullanıcının diline göre seçilir; cubit yalnızca nedeni bilir.
-enum LoginErrorReason { invalidCredentials, connection, unknown }
-
 class LoginError extends LoginState {
-  final LoginErrorReason reason;
+  final AuthErrorReason reason;
 
   const LoginError({required this.reason});
 

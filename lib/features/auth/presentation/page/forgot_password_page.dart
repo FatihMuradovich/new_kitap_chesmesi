@@ -11,6 +11,7 @@ import 'package:new_kitap_chesmesi/features/auth/presentation/widget/custom_text
 import 'package:new_kitap_chesmesi/features/auth/presentation/widget/login_register_button.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';
 import '../../../../common/constants/custom_colors.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 @RoutePage()
 class ForgotPasswordPage extends StatefulWidget {
@@ -43,7 +44,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               // Hata varsa mesaj göster
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.message),
+                  content: Text(authErrorMessage(context, state.reason)),
                   backgroundColor: Colors.red,
                 ),
               );

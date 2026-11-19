@@ -15,6 +15,7 @@ import 'package:new_kitap_chesmesi/localization/localization.dart';
 import '../../../../common/constants/custom_colors.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../widget/custom_text_form_field.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 // ignore: must_be_immutable
 @RoutePage()
@@ -190,7 +191,10 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                     if (state is ForgotSuccess) {
                       di<AppRouter>().maybePop();
                     } else if (state is ForgotError) {
-                      NotificationHelper.showError(context, context.l10n.errorMessage);
+                      NotificationHelper.showError(
+                        context,
+                        authErrorMessage(context, state.reason),
+                      );
                     }
                   },
                   child: CustomButton(

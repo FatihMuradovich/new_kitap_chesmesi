@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/repository/register_code_otp_repository.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_code/register_code_state.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 class RegisterCodeCubit extends Cubit<RegisterCodeState> {
   RegisterCodeOtpRepository registerCodeOtpRepository;
@@ -18,12 +19,16 @@ class RegisterCodeCubit extends Cubit<RegisterCodeState> {
           await registerCodeOtpRepository.sendCode(phoneNumber, type, context);
       emit(RegisterCodeSuccess(registerCodeModel: result));
     } catch (e) {
-      // Extract clean error message
-      String errorMessage = e.toString();
-      if (errorMessage.startsWith('Exception: ')) {
-        errorMessage = errorMessage.substring('Exception: '.length);
-      }
-      emit(RegisterCodeError(message: errorMessage));
+      emit(RegisterCodeError(
+        reason: classifyAuthError(
+          e,
+          // Kayıt kodu reddedildiyse numara zaten kayıtlıdır (telefon biçimi
+          // formda doğrulanıyor). Şifre sıfırlamada genel hata gösterilir.
+          whenRejected: type == 'Register'
+              ? AuthErrorReason.phoneAlreadyRegistered
+              : AuthErrorReason.unknown,
+        ),
+      ));
     }
   }
 }

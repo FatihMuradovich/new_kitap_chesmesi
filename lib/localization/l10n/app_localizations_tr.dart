@@ -599,6 +599,14 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get phoneAlreadyRegistered =>
+      'Bu telefon belgisi eýýäm hasaba alnan. Ulgama giriň.';
+
+  @override
+  String get tooManyRequests =>
+      'Synanyşyk köp boldy. Biraz garaşyp, täzeden synanyşyň.';
+
+  @override
   String get errorMessage => 'Näsazlyk ýüze çykdy!';
 
   @override

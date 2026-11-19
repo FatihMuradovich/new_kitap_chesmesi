@@ -9,12 +9,9 @@ class ForgotPasswordDataSource {
     required this.dioSetting,
   });
 
-  
-
   Future<ForgotPasswordModel> forgotPassword(
       ForgotPasswordModel forgotPasswordModel, BuildContext context) async {
     try {
-      
       final response = await dioSetting.dio.post(
         '/auth/forgot-password',
         data: forgotPasswordModel.toMap(),
@@ -23,7 +20,7 @@ class ForgotPasswordDataSource {
       return ForgotPasswordModel.fromMap(response.data['data']);
     } catch (e) {
       debugPrint(e.toString());
-      throw Exception(e.toString());
+      rethrow; // Orijinal hata korunur: cubit nedeni (internet / red) ayırt eder.
     }
   }
 }

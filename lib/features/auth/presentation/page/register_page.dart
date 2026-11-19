@@ -16,6 +16,7 @@ import 'package:new_kitap_chesmesi/app/router/app_router.gr.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/widget/custom_text_form_field.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/widget/login_register_button.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 @RoutePage()
 class RegisterPage extends StatefulWidget {
@@ -295,7 +296,7 @@ class _RegisterPageState extends State<RegisterPage> {
           } else if (state is RegisterCodeError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(authErrorMessage(context, state.reason)),
                 backgroundColor: Colors.red,
               ),
             );

@@ -13,6 +13,7 @@ import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.dart';
 import 'package:new_kitap_chesmesi/app/router/app_router.gr.dart';
 import 'package:new_kitap_chesmesi/localization/localization.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
@@ -44,12 +45,7 @@ class _LoginPageState extends State<LoginPage> {
           if (state is LoginSuccess) {
             di<AppRouter>().replaceAll([const CustomNavBarRoute()]);
           } else if (state is LoginError) {
-            final message = switch (state.reason) {
-              LoginErrorReason.invalidCredentials =>
-                context.l10n.invalidCredentials,
-              LoginErrorReason.connection => context.l10n.noInternetMessage,
-              LoginErrorReason.unknown => context.l10n.errorMessage,
-            };
+            final message = authErrorMessage(context, state.reason);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(message)),
             );

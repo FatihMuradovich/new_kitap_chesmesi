@@ -6,6 +6,7 @@ import 'package:new_kitap_chesmesi/core/service/service.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/model/login_model.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/model/register_model.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/repository/login_repository.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_state.dart';
 
@@ -37,7 +38,7 @@ DioException _dioError(
   );
 }
 
-Future<LoginErrorReason> _reasonFor(Object error) async {
+Future<AuthErrorReason> _reasonFor(Object error) async {
   final cubit = LoginCubit(
     loginRepository: _ThrowingLoginRepository(error),
     notificationTokenDataSource: _FakeTokenDataSource(),
@@ -51,21 +52,21 @@ Future<LoginErrorReason> _reasonFor(Object error) async {
 void main() {
   test('Yanlış şifre (401/400) → geçersiz bilgiler', () async {
     expect(await _reasonFor(_dioError(status: 401)),
-        LoginErrorReason.invalidCredentials);
+        AuthErrorReason.invalidCredentials);
     expect(await _reasonFor(_dioError(status: 400)),
-        LoginErrorReason.invalidCredentials);
+        AuthErrorReason.invalidCredentials);
   });
 
   test('İnternet yok / zaman aşımı → bağlantı hatası, "yanlış şifre" değil',
       () async {
     expect(await _reasonFor(_dioError(type: DioExceptionType.connectionError)),
-        LoginErrorReason.connection);
+        AuthErrorReason.connection);
     expect(
         await _reasonFor(_dioError(type: DioExceptionType.connectionTimeout)),
-        LoginErrorReason.connection);
+        AuthErrorReason.connection);
   });
 
   test('Sunucu hatası (500) → genel hata', () async {
-    expect(await _reasonFor(_dioError(status: 500)), LoginErrorReason.unknown);
+    expect(await _reasonFor(_dioError(status: 500)), AuthErrorReason.unknown);
   });
 }

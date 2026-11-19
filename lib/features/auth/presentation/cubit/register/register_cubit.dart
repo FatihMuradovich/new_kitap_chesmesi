@@ -9,6 +9,7 @@ import 'package:new_kitap_chesmesi/app/di.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
 import 'package:new_kitap_chesmesi/core/service/notification_token_data_source.dart';
 import 'package:new_kitap_chesmesi/core/service/service.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
   final RegisterRepository registerRepository;
@@ -26,7 +27,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoading());
     try {
       final result = await registerRepository.register(registerModel, context);
-    
+
       // Persist tokens on successful register
       if (result.accessToken != null && result.refreshToken != null) {
         // Use DioClient helper via DI
@@ -43,17 +44,17 @@ class RegisterCubit extends Cubit<RegisterState> {
           }
         } catch (e) {
           // Don't fail registration if FCM token registration fails
-          log('Failed to register FCM token after registration: $e', name: 'Register Error');
+          log('Failed to register FCM token after registration: $e',
+              name: 'Register Error');
         }
       }
       emit(RegisterSuccess(registerModel: result));
     } catch (e) {
-      // Extract clean error message
-      String errorMessage = e.toString();
-      if (errorMessage.startsWith('Exception: ')) {
-        errorMessage = errorMessage.substring('Exception: '.length);
-      }
-      emit(RegisterError(message: errorMessage));
+      log('Register failed: $e', name: 'Register');
+      // Kayıt isteği reddedildiyse doğrulama kodu (veya davet kodu) yanlıştır.
+      emit(RegisterError(
+        reason: classifyAuthError(e, whenRejected: AuthErrorReason.invalidCode),
+      ));
     }
   }
 }

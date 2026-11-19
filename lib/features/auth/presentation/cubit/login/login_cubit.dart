@@ -6,10 +6,10 @@ import 'package:new_kitap_chesmesi/features/auth/domain/model/login_model.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/repository/login_repository.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/login/login_state.dart';
 import 'package:new_kitap_chesmesi/app/di.dart';
-import 'package:new_kitap_chesmesi/common/utils/network_error.dart';
 import 'package:new_kitap_chesmesi/core/network/dio_client.dart';
 import 'package:new_kitap_chesmesi/core/service/notification_token_data_source.dart';
 import 'package:new_kitap_chesmesi/core/service/service.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepository loginRepository;
@@ -49,17 +49,12 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginSuccess(registerModel: result));
     } catch (e) {
       log('Login failed: $e', name: 'Login');
-      emit(LoginError(reason: _reasonFor(e)));
+      emit(LoginError(
+        reason: classifyAuthError(
+          e,
+          whenRejected: AuthErrorReason.invalidCredentials,
+        ),
+      ));
     }
-  }
-
-  LoginErrorReason _reasonFor(Object error) {
-    if (isConnectionError(error)) return LoginErrorReason.connection;
-    final status = statusCodeOf(error);
-    // 4xx: sunucu bilgileri reddetti. 2xx: yanıt geldi ama success=false.
-    if (status != null && status >= 200 && status < 500) {
-      return LoginErrorReason.invalidCredentials;
-    }
-    return LoginErrorReason.unknown;
   }
 }

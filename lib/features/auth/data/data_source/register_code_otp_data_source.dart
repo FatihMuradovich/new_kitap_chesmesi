@@ -27,7 +27,7 @@ class RegisterCodeOtpDataSource {
   }
 
   Future<RegisterCodeModel> sendCode(
-      String phoneNumber, String type ,BuildContext context) async {
+      String phoneNumber, String type, BuildContext context) async {
     try {
       final langCode = getCurrentLanguageCode(context);
       final response = await dioSetting.dio.post(
@@ -41,23 +41,17 @@ class RegisterCodeOtpDataSource {
         // final getResponse = (response.data);
         // return getResponse;
         return RegisterCodeModel.fromMap(response.data['data']);
-      } else {
-        // Backend'den gelen error mesajını kullan
-        final errorMessage = response.data['message'] ?? 'Bu nomer bilen agza bolan müşderi bar!';
-        throw Exception(errorMessage);
       }
-    } on DioException catch (e) {
-      debugPrint(e.toString());
-      // Dio exception durumunda backend'den gelen mesajı kontrol et
-      if (e.response != null && e.response?.data != null) {
-        final errorMessage = e.response?.data['message'] ?? 'Bu nomer bilen agza bolan müşderi bar!';
-        throw Exception(errorMessage);
-      } else {
-        throw Exception('Ulgam ýalňyşlygy ýüze çykdy');
-      }
+      // Yanıt geldi ama kod gönderilmedi.
+      throw DioException.badResponse(
+        statusCode: response.statusCode ?? 0,
+        requestOptions: response.requestOptions,
+        response: response,
+      );
     } catch (e) {
+      // Orijinal hata korunur: cubit nedeni (internet / red) ayırt eder.
       debugPrint(e.toString());
-      throw Exception('Ulgam ýalňyşlygy ýüze çykdy');
+      rethrow;
     }
   }
 }

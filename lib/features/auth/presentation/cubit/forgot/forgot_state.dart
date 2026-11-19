@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:new_kitap_chesmesi/features/auth/domain/model/forgot_password_model.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 abstract class ForgotState extends Equatable {
   const ForgotState();
@@ -31,13 +32,13 @@ class ForgotSuccess extends ForgotState {
 }
 
 class ForgotError extends ForgotState {
-  final String message;
+  final AuthErrorReason reason;
 
-  const ForgotError({required this.message});
-
-  @override
-  List<Object> get props => [message];
+  const ForgotError({required this.reason});
 
   @override
-  String toString() => 'ForgotError(message: $message)';
+  List<Object> get props => [reason];
+
+  @override
+  String toString() => 'ForgotError(reason: $reason)';
 }

@@ -1246,6 +1246,18 @@ abstract class AppLocalizations {
   /// **'Not enough stock. You can add at most {count}.'**
   String stockLimit(int count);
 
+  /// No description provided for @phoneAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone number is already registered. Please sign in.'**
+  String get phoneAlreadyRegistered;
+
+  /// No description provided for @tooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait a moment and try again.'**
+  String get tooManyRequests;
+
   /// No description provided for @errorMessage.
   ///
   /// In en, this message translates to:

@@ -600,6 +600,14 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get phoneAlreadyRegistered =>
+      'Этот номер телефона уже зарегистрирован. Пожалуйста, войдите.';
+
+  @override
+  String get tooManyRequests =>
+      'Слишком много попыток. Подождите немного и попробуйте снова.';
+
+  @override
   String get errorMessage => 'Возникла проблема!';
 
   @override

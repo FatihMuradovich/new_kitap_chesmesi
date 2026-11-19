@@ -2,6 +2,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:new_kitap_chesmesi/features/auth/domain/model/register_model.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 abstract class RegisterState extends Equatable {
   const RegisterState();
@@ -19,15 +20,16 @@ class RegisterSuccess extends RegisterState {
   RegisterSuccess({
     required this.registerModel,
   });
-
-  
 }
 
 class RegisterError extends RegisterState {
-  final String message;
+  final AuthErrorReason reason;
 
-  const RegisterError({required this.message});
+  const RegisterError({required this.reason});
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [reason];
+
+  @override
+  String toString() => 'RegisterError(reason: $reason)';
 }

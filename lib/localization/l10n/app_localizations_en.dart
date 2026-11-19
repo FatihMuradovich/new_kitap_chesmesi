@@ -601,6 +601,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get phoneAlreadyRegistered =>
+      'This phone number is already registered. Please sign in.';
+
+  @override
+  String get tooManyRequests =>
+      'Too many attempts. Please wait a moment and try again.';
+
+  @override
   String get errorMessage => 'An error occurred!';
 
   @override

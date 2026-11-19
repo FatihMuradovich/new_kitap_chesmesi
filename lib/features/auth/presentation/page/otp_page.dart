@@ -19,6 +19,7 @@ import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/reg
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_code/register_code_cubit.dart';
 import 'package:new_kitap_chesmesi/features/auth/presentation/cubit/register_code/register_code_state.dart';
+import 'package:new_kitap_chesmesi/features/auth/presentation/auth_error.dart';
 
 // ignore: must_be_immutable
 @RoutePage()
@@ -108,7 +109,8 @@ class _OtpPageState extends State<OtpPage> {
                 di<AppRouter>().replace(const OnboardingCategoryRoute());
               } else if (state is RegisterError) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
+                  SnackBar(
+                      content: Text(authErrorMessage(context, state.reason))),
                 );
               }
             },
@@ -125,7 +127,7 @@ class _OtpPageState extends State<OtpPage> {
               } else if (state is RegisterCodeError) {
                 NotificationHelper.showError(
                   context,
-                  state.message,
+                  authErrorMessage(context, state.reason),
                 );
               }
             },

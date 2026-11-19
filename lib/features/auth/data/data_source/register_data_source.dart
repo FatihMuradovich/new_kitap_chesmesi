@@ -36,10 +36,9 @@ class RegisterDataSource {
       );
       // if (response.statusCode == 200 && response.data['success'] == true) {
       return RegisterModel.fromMap(response.data['data']);
-      
     } catch (e) {
       debugPrint(e.toString());
-      throw Exception(e.toString());
+      rethrow; // Orijinal hata korunur: cubit nedeni (internet / red) ayırt eder.
     }
   }
 }

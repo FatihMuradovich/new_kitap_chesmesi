@@ -229,6 +229,8 @@
     "@_MESSAGES_ALERTS_DESCRIPTION": "Mesajlar ve uyarılar",
     "invalidCredentials": "Telefon belgiňiz ýa-da parolyňyz nädogry",
     "stockLimit": "Ammarda ýeterlik haryt ýok. Iň köp {count} sany goşup bilersiňiz.",
+    "phoneAlreadyRegistered": "Bu telefon belgisi eýýäm hasaba alnan. Ulgama giriň.",
+    "tooManyRequests": "Synanyşyk köp boldy. Biraz garaşyp, täzeden synanyşyň.",
     "errorMessage": "Näsazlyk ýüze çykdy!",
     "notificationIsEmpty": "Bildiriş ýok!",
     "notificationIsEmptyDescription": "Häzirlikçe size bildiriş ýok",
